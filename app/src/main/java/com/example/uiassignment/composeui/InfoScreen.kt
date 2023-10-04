@@ -1,9 +1,6 @@
 package com.example.uiassignment.composeui
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -32,7 +29,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -328,7 +324,7 @@ fun InfoScreen(
             Spacer(modifier = Modifier.height(9.dp))
 
             Graph(
-                model = model, context
+                model = model, context,infoScreenViewModel
             )
 
             Spacer(modifier = Modifier.height(9.dp))
@@ -493,11 +489,10 @@ fun InfoScreen(
 @Composable
 fun Graph(
     model: Model,
-    context: Context
+    context: Context,
+    infoViewModel: InfoScreenViewModel
 ) {
-    var currentOutPut by remember {
-        mutableStateOf(GraphOutputType.WEEK)
-    }
+    val currentOutPut by infoViewModel.graphType.collectAsState()
 
     val graphTypes = listOf(
         GraphSelector(type = GraphOutputType.HOUR,text ="1H"),
@@ -506,19 +501,6 @@ fun Graph(
         GraphSelector(type = GraphOutputType.MONTH,text ="1M"),
         GraphSelector(type = GraphOutputType.YEAR,text ="1Y")
     )
-
-    DisposableEffect(currentOutPut){
-        val graphTypeReceiver = object : BroadcastReceiver(){
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val received = p1?.getStringExtra("ChangeGraphOutput")
-                currentOutPut = GraphOutputType.valueOf(received.toString())
-            }
-        }
-        context.registerReceiver(graphTypeReceiver, IntentFilter("ChangeGraphOutput"), Context.RECEIVER_NOT_EXPORTED)
-        onDispose {
-            context.unregisterReceiver(graphTypeReceiver)
-        }
-    }
 
     Column {
         LineChart(
@@ -551,7 +533,7 @@ fun Graph(
                     currentType = currentOutPut,
                     thisType = it.type,
                     buttonText = it.text,
-                    context = context
+                    infoViewModel
                 )
             }
         }
@@ -614,15 +596,13 @@ fun GraphOutPutSelector(
     currentType: GraphOutputType,
     thisType: GraphOutputType,
     buttonText: String,
-    context: Context
+    infoViewModel: InfoScreenViewModel
 ) {
     Spacer(modifier = Modifier.width(5.dp))
 
     Button(
         onClick = {
-            val intent = Intent("ChangeGraphOutput")
-            intent.putExtra("ChangeGraphOutput",thisType.name)
-            context.sendBroadcast(intent)
+            infoViewModel.changeGraphType(thisType)
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = if (currentType == thisType) {
@@ -746,7 +726,7 @@ fun Links(
     Spacer(modifier = Modifier.width(4.dp))
 }
 
-@Preview()
+@Preview
 @Composable
 fun ShowQRPreview() {
     ShowMyQR()

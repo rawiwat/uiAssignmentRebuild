@@ -2,7 +2,7 @@ package com.example.uiassignment.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.uiassignment.Database
-import com.example.uiassignment.FakeData
+import com.example.uiassignment.GraphOutputType
 import com.example.uiassignment.LinkModel
 import com.example.uiassignment.Model
 import com.example.uiassignment.StatsModel
@@ -21,4 +21,10 @@ class InfoScreenViewModel(
     private val _linkList = MutableStateFlow(database.getLinkList())
     val linkList: StateFlow<List<LinkModel>> = _linkList
 
+    private var _graphType = MutableStateFlow(GraphOutputType.WEEK)
+    val graphType: StateFlow<GraphOutputType> = _graphType
+
+    fun changeGraphType(type:GraphOutputType) {
+        _graphType.value = type
+    }
 }
