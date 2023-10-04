@@ -10,6 +10,7 @@ interface Database {
     fun getLinkList(): List<LinkModel>
     fun getFavoriteTokens(): List<TokenModel>
     fun getPopularTokens(): List<TokenModel>
+    fun getActivityRecords(): List<Categorized>
 }
 
 class FakeDatabase :Database {
@@ -47,6 +48,15 @@ class FakeDatabase :Database {
 
     override fun getPopularTokens(): List<TokenModel> {
         return FakeData().popularTokens()
+    }
+
+    override fun getActivityRecords(): List<Categorized> {
+        return generateRecord().map {
+            Categorized(
+                month = it.key.toString(),
+                activities = it.value
+            )
+        }
     }
 
 

@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class ArchiveViewModel(database: Database, id:Int):ViewModel() {
     private val thisDatabase = database
     val model = thisDatabase.getModelFromID(id)
+    val records = thisDatabase.getActivityRecords()
 }
