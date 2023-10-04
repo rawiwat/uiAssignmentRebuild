@@ -1,9 +1,5 @@
 package com.example.uiassignment.composeui
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -44,7 +40,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -61,7 +56,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -73,162 +67,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
-import com.example.uiassignment.FakeData
+import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.R
-import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.TokenModel
-import com.example.uiassignment.toModel
 import com.example.uiassignment.trimDouble
 import com.example.uiassignment.viewmodel.NumberInputViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.uiassignment.viewmodel.SwapViewModel
+import com.example.uiassignment.viewmodel.SwipeViewModel
 
 @Composable
 fun SwapScreen(
     textFont: FontFamily,
-    context: Context,
-    modelId: Int,
+    swapViewModel: SwapViewModel
 ) {
-    var model by remember {
-        mutableStateOf(FakeData().getModelFromID(modelId).toModel())
-    }
+    val model by swapViewModel.model.collectAsState()
     val numberInputViewModel = NumberInputViewModel()
+    val configuration = LocalConfiguration.current
+    val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)
-    var sendingMoney by rememberSaveable {
-        mutableStateOf("0")
-    }
-    var swappingMoney by rememberSaveable {
-        mutableStateOf("0")
-    }
+    val sendingMoney by numberInputViewModel.money.collectAsState()
+    val swappingMoney by numberInputViewModel.swappingMoney.collectAsState()
+    val loadingResult by numberInputViewModel.loading.collectAsState()
+    val tokenChoose by swapViewModel.tokenChosen.collectAsState()
+    val token by swapViewModel.token.collectAsState()
+    val topCardHeight by remember { mutableIntStateOf(configuration.screenHeightDp / 7) }
+    val attachedHeight by remember { mutableIntStateOf(topCardHeight / 4) }
+    val bottomCardClosedHeight by remember { mutableIntStateOf(topCardHeight + attachedHeight) }
+    val bottomCardOpenedHeight by remember { mutableIntStateOf(bottomCardClosedHeight + attachedHeight) }
     val listOfInput = listOf("1","2","3","4","5","6","7","8","9",".","0","←")
-    val singleDigitNum = listOf("0","1","2","3","4","5","6","7","8","9")
-    val CHANGE_ACTIVATION_TO by remember {
-        mutableStateOf("change_swap_activation_to")
-    }
-
-    val CHANGE_ACTIVATION by remember {
-        mutableStateOf("change_swap_activation")
-    }
-
-    var tokenChoose by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    var token by remember {
-        mutableStateOf(FakeData().getTokenFromID(6))
-    }
-    val configuration = LocalConfiguration.current
-    val topCardHeight by remember {
-        mutableIntStateOf(configuration.screenHeightDp / 7)
-    }
-
-    val attachedHeight by remember {
-        mutableIntStateOf(topCardHeight / 4)
-    }
-    val bottomCardClosedHeight by remember {
-        mutableIntStateOf(topCardHeight + attachedHeight)
-    }
-
-    val bottomCardOpenedHeight by remember {
-        mutableIntStateOf(bottomCardClosedHeight + attachedHeight)
-    }
-
-    var loadingResult by remember {
-        mutableStateOf(false)
-    }
-
-    DisposableEffect(sendingMoney) {
-        val moneyBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                loadingResult = true
-                if (p1 != null) {
-                    val received = p1.getStringExtra("moneyEdit").toString()
-                    if (sendingMoney == "0") {
-                        if (singleDigitNum.contains(received)) {
-                            sendingMoney = received
-                        } else if (received == ".") {
-                            sendingMoney += "."
-                        }
-                    } else {
-                        if (singleDigitNum.contains(received)) {
-                            sendingMoney += received
-                        } else if (received == ".") {
-                            if (sendingMoney.contains(".")) {
-                                sendingMoney = sendingMoney.filterNot { it == '.' }
-                                sendingMoney += "."
-                            } else {
-                                sendingMoney += "."
-                            }
-                        } else if (received == "←") {
-                            if (sendingMoney.length >= 2) {
-                                sendingMoney = sendingMoney.substring(0,sendingMoney.length - 1)
-                            } else {
-                                sendingMoney = "0"
-                            }
-                        }
-                    }
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(500)
-                        loadingResult = false
-                        swappingMoney = trimDouble(sendingMoney.toDouble() * 3.14,"10").toString()
-                    }
-                }
-            }
-        }
-
-        context.registerReceiver(
-            moneyBroadcastReceiver,
-            IntentFilter("moneyEdit"),
-            Context.RECEIVER_EXPORTED
-        )
-
-        onDispose {
-            context.unregisterReceiver(moneyBroadcastReceiver)
-        }
-    }
-
-    DisposableEffect(model) {
-        val modelBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val idReceived = p1!!.getIntExtra("change_model_to",model.id)
-                model = FakeData().getModelFromID(idReceived).toModel()
-            }
-        }
-
-        context.registerReceiver(
-            modelBroadcastReceiver,
-            IntentFilter("change_model"),
-            Context.RECEIVER_EXPORTED
-        )
-
-        onDispose{
-            context.unregisterReceiver(modelBroadcastReceiver)
-        }
-    }
-
-    DisposableEffect(tokenChoose) {
-        val tokenReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val tokenReceived = p1?.getIntExtra("Chosen_Token_id",6)
-                tokenReceived?.let {
-                    token = FakeData().getTokenFromID(it)
-                    tokenChoose = true
-                }!!
-            }
-        }
-
-        context.registerReceiver(
-            tokenReceiver,
-            IntentFilter("Choose_Token"),
-            Context.RECEIVER_EXPORTED
-        )
-        onDispose {
-            context.unregisterReceiver(tokenReceiver)
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -615,11 +482,7 @@ fun SwapScreen(
                                         contentColor = Color.White
                                     ),
                                     modifier = Modifier
-                                        .clickable {
-                                            val intent = Intent(CHANGE_ACTIVATION)
-                                            intent.putExtra(CHANGE_ACTIVATION_TO,true)
-                                            context.sendBroadcast(intent)
-                                        }
+                                        .clickable { swipeViewModel.turnOn() }
                                 ) {
                                     Text(
                                         text = "Choose a Token",
@@ -785,58 +648,27 @@ fun SwapScreen(
         }
     }
 
-    ChangeTokenInSwap(context = context)
+    ChangeTokenInSwap(
+        swapViewModel = swapViewModel,
+        swipeViewModel = swipeViewModel
+    )
 }
 
 @Composable
 fun ChangeTokenInSwap(
-    context: Context
+    swapViewModel: SwapViewModel,
+    swipeViewModel: SwipeViewModel
 ) {
     val configuration = LocalConfiguration.current
-    val viewModel = SwipeViewModel(configuration.screenHeightDp / 2)
-    val offset by viewModel.currentOffset.collectAsState()
+    val offset by swipeViewModel.currentOffset.collectAsState()
     val secondaryColor = colorResource(id = R.color.teal_700)
     val textFont = FontFamily(Font(R.font.impact))
-    val listOfToken = FakeData().getTokens()
-
+    val listOfToken by swapViewModel.tokens.collectAsState()
+    val active by swipeViewModel.activation.collectAsState()
     val favorite = listOfToken.subList(0,2)
     val popular = listOfToken.subList(3,4)
-    val padding8 by remember {
-        mutableStateOf(8.dp)
-    }
-    val padding12 by remember {
-        mutableStateOf(12.dp)
-    }
-    var active by remember {
-        mutableStateOf(false)
-    }
-
-    val CHANGE_ACTIVATION_TO by remember {
-        mutableStateOf("change_swap_activation_to")
-    }
-
-    val CHANGE_ACTIVATION by remember {
-        mutableStateOf("change_swap_activation")
-    }
-
-    DisposableEffect(active) {
-        val activationReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val activationReceived = p1!!.getBooleanExtra(CHANGE_ACTIVATION_TO, false)
-                active = activationReceived
-                viewModel.setOffsetToDefault()
-            }
-        }
-        context.registerReceiver(
-            activationReceiver,
-            IntentFilter(CHANGE_ACTIVATION),
-            Context.RECEIVER_EXPORTED
-        )
-        onDispose {
-            context.unregisterReceiver(activationReceiver)
-        }
-    }
-
+    val padding8 by remember { mutableStateOf(8.dp) }
+    val padding12 by remember { mutableStateOf(12.dp) }
     AnimatedVisibility(
         visible = active,
         enter = slideInVertically(
@@ -873,7 +705,7 @@ fun ChangeTokenInSwap(
                             .pointerInput(Unit) {
                                 detectDragGestures { change, dragAmount ->
                                     change.consume()
-                                    viewModel.changeOffset(dragAmount.y.toInt())
+                                    swipeViewModel.changeOffset(dragAmount.y.toInt())
                                 }
                             },
                     ) {
@@ -948,7 +780,12 @@ fun ChangeTokenInSwap(
                             .wrapContentSize()
                     ) {
                         items(listOfToken, key = { it.id }) {
-                            SuggestedToken(imageId = it.imageId, name = it.description, context = context, id = it.id)
+                            SuggestedToken(
+                                imageId = it.imageId,
+                                name = it.description,
+                                swapViewModel = swapViewModel,
+                                swipeViewModel = swipeViewModel,
+                                id = it.id)
                         }
                     }
                 }
@@ -971,7 +808,11 @@ fun ChangeTokenInSwap(
                         favorite,
                         key = { it.id }
                     ) {
-                        ChooseToken(model = it, context = context)
+                        ChooseToken(
+                            model = it,
+                            swipeViewModel = swipeViewModel,
+                            swapViewModel = swapViewModel
+                            )
                     }
                 }
 
@@ -993,7 +834,11 @@ fun ChangeTokenInSwap(
                         popular,
                         key = { it.id }
                     ) {
-                        ChooseToken(model = it, context = context)
+                        ChooseToken(
+                            model = it,
+                            swipeViewModel,
+                            swapViewModel
+                        )
                     }
                 }
             }
@@ -1004,7 +849,8 @@ fun ChangeTokenInSwap(
 @Composable
 fun ChooseToken(
     model: TokenModel,
-    context: Context
+    swipeViewModel: SwipeViewModel,
+    swapViewModel: SwapViewModel
 ) {
     val primaryTextColor = colorResource(id = R.color.teal_200)
     val secondaryTextColor = colorResource(id = R.color.teal_700)
@@ -1012,18 +858,15 @@ fun ChooseToken(
     val topFontSize = 16.sp
     val bottomFontSize = 14.sp
     val number = getRawMoneyNumber(model.current.toString())
+
     ConstraintLayout(
         modifier = Modifier
             .height(75.dp)
             .background(color = Color.Black)
             .fillMaxWidth()
             .clickable {
-                val activation = Intent("change_swap_activation")
-                activation.putExtra("change_swap_activation_to", false)
-                context.sendBroadcast(activation)
-                val intent = Intent("Choose_Token")
-                intent.putExtra("Chosen_Token_id", model.id)
-                context.sendBroadcast(intent)
+                swipeViewModel.turnOff()
+                swapViewModel.changeToken(model.id)
             }
     ) {
         val (image, name, money, num, synonym) = createRefs()
@@ -1106,19 +949,16 @@ fun ChooseToken(
 fun SuggestedToken(
     imageId: Int,
     name: String,
-    context: Context,
-    id: Int
+    id: Int,
+    swapViewModel: SwapViewModel,
+    swipeViewModel: SwipeViewModel
 ) {
     Card(
         modifier = Modifier
             .wrapContentSize()
             .clickable {
-                val activation = Intent("change_swap_activation")
-                activation.putExtra("change_swap_activation_to", false)
-                context.sendBroadcast(activation)
-                val intent = Intent("Choose_Token")
-                intent.putExtra("Chosen_Token_id", id)
-                context.sendBroadcast(intent)
+                swipeViewModel.turnOff()
+                swapViewModel.changeToken(id)
             }
             .padding(5.dp),
         colors = CardDefaults.cardColors(
@@ -1164,7 +1004,6 @@ fun SuggestedToken(
 fun PreviewSwap() {
     SwapScreen(
         textFont = FontFamily(Font(R.font.impact)),
-        context = LocalContext.current,
-        modelId = 3
+        swapViewModel = SwapViewModel(FakeDatabase(),2)
     )
 }

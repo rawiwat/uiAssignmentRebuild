@@ -61,13 +61,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
-import com.example.uiassignment.FakeData
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
-import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.getTokenOffset
 import com.example.uiassignment.viewmodel.NumberInputViewModel
+import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.viewmodel.TransactionViewModel
 
 @Composable
@@ -626,7 +625,7 @@ fun ChangeModel(
 
                 LazyColumn {
                     items(
-                        FakeData().getModels(),
+                        transactionViewModel.listOfModels.value,
                         key = { it.id }
                     ) {
                         ConstraintOption(

@@ -28,6 +28,7 @@ import com.example.uiassignment.composeui.Archive
 import com.example.uiassignment.ui.theme.UiAssignmentTheme
  import com.example.uiassignment.viewmodel.HomeViewModel
  import com.example.uiassignment.viewmodel.InfoScreenViewModel
+ import com.example.uiassignment.viewmodel.SwapViewModel
  import com.example.uiassignment.viewmodel.TransactionViewModel
 
  class MainActivity : ComponentActivity() {
@@ -196,9 +197,8 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
          ) {
              if (it.arguments!=null) {
                  SwapScreen(
-                     context = context,
                      textFont = FontFamily(Font(R.font.impact)),
-                     modelId = it.arguments!!.getInt("id")
+                     swapViewModel = SwapViewModel(selectedDatabase,it.arguments!!.getInt("id"))
                  )
              }
          }
