@@ -69,7 +69,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
-import com.example.uiassignment.FakeDatabase
+import com.example.uiassignment.FakeData
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
 import com.example.uiassignment.viewmodel.SwipeViewModel
@@ -83,7 +83,7 @@ fun Transaction(
     modelId: Int
 ) {
     var model by remember {
-        mutableStateOf(FakeDatabase().getModelFromID(modelId).toModel())
+        mutableStateOf(FakeData().getModelFromID(modelId).toModel())
     }
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)
@@ -141,7 +141,7 @@ fun Transaction(
         val modelBroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
                 val idReceived = p1!!.getIntExtra("change_model_to",model.id)
-                model = FakeDatabase().getModelFromID(idReceived).toModel()
+                model = FakeData().getModelFromID(idReceived).toModel()
             }
         }
 
@@ -722,7 +722,7 @@ fun ChangeModel(
 
                 LazyColumn {
                     items(
-                        FakeDatabase().getFakeData(),
+                        FakeData().getModels(),
                         key = { it.id }
                     ) {
                         ConstraintOption(model = it, context = context)

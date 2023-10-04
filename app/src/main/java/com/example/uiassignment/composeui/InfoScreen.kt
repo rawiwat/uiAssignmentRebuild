@@ -70,7 +70,7 @@ import co.yml.charts.ui.linechart.model.LineType
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
-import com.example.uiassignment.FakeDatabase
+import com.example.uiassignment.FakeData
 import com.example.uiassignment.GraphOutputType
 import com.example.uiassignment.GraphSelector
 import com.example.uiassignment.LinkModel
@@ -91,7 +91,7 @@ fun InfoScreen(
     context: Context,
     navController: NavController
 ) {
-    val model = FakeDatabase().getModelFromID(id).toModel()
+    val model = FakeData().getModelFromID(id).toModel()
     var readMore by remember {
         mutableStateOf(false)
     }
@@ -438,7 +438,7 @@ fun InfoScreen(
             Spacer(modifier = Modifier.height(9.dp))
 
             Text(
-                text = FakeDatabase().getDetailFromId(model.id),
+                text = FakeData().getDetailFromId(model.id),
                 maxLines = if (readMore) Int.MAX_VALUE else 3,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(color = Color.White),

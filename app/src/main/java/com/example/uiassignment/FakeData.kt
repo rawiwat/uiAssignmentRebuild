@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import co.yml.charts.common.model.Point
 import kotlin.random.Random
 
-class FakeDatabase {
+class FakeData {
     private val samplePoint1: List<Point> = generatePointData()
     private val sample1 = Model(
         1,
@@ -124,7 +124,7 @@ class FakeDatabase {
         imageId = R.drawable.token_unity
     )
 
-    fun getFakeData(): List<Model> {
+    fun getModels(): List<Model> {
         return listOf(
             sample1,
             sample2,
@@ -141,9 +141,9 @@ class FakeDatabase {
         )
     }
 
-    fun getModelFromID(id:Int): Model? {
+    fun getModelFromID(id:Int): Model {
         try {
-            for (model in getFakeData()) {
+            for (model in getModels()) {
                 if (id == model.id) {
                     return model
                 }
@@ -151,7 +151,7 @@ class FakeDatabase {
         } catch (e:Exception) {
             println(e)
         }
-        return null
+        return sample1
     }
 
     fun getTokenFromID(id:Int): TokenModel {
@@ -259,4 +259,20 @@ class FakeDatabase {
             else -> ""
         }
     }
+
+    fun getStatsList() = listOf(
+        StatsModel("Doritos","23.15M"),
+        StatsModel("Pringle","14.16M"),
+        StatsModel("Tarkis","16.75M"),
+        StatsModel("Lays","21.15M")
+    )
+
+    fun getLinkList() = listOf(
+        LinkModel(imageId = R.drawable.internet_icon, name = "Website"),
+        LinkModel(imageId = R.drawable.facebook_icon, name = "Facebook"),
+        LinkModel(imageId = R.drawable.youtube_icon, name = "Youtube"),
+        LinkModel(imageId = R.drawable.twitter_icon, name = "Twitter"),
+        LinkModel(imageId = R.drawable.instagram_icon, name = "Instagram"),
+        LinkModel(imageId = R.drawable.line_icon, name = "Line")
+    )
 }

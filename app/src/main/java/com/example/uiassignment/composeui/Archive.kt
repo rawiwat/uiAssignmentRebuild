@@ -60,7 +60,7 @@ import coil.compose.rememberImagePainter
 import com.example.uiassignment.ArchiveScreenType
 import com.example.uiassignment.Categorized
 import com.example.uiassignment.CryptoActivity
-import com.example.uiassignment.FakeDatabase
+import com.example.uiassignment.FakeData
 import com.example.uiassignment.Month
 import com.example.uiassignment.R
 import com.example.uiassignment.generateRecord
@@ -80,7 +80,7 @@ fun Archive(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val size = screenWidthDp / 2
     val model = remember(modelId) {
-        FakeDatabase().getModelFromID(modelId).toModel()
+        FakeData().getModelFromID(modelId).toModel()
     }
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)

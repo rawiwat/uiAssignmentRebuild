@@ -73,7 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
-import com.example.uiassignment.FakeDatabase
+import com.example.uiassignment.FakeData
 import com.example.uiassignment.R
 import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.TokenModel
@@ -91,7 +91,7 @@ fun SwapScreen(
     modelId: Int,
 ) {
     var model by remember {
-        mutableStateOf(FakeDatabase().getModelFromID(modelId).toModel())
+        mutableStateOf(FakeData().getModelFromID(modelId).toModel())
     }
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)
@@ -116,7 +116,7 @@ fun SwapScreen(
     }
 
     var token by remember {
-        mutableStateOf(FakeDatabase().getTokenFromID(6))
+        mutableStateOf(FakeData().getTokenFromID(6))
     }
     val configuration = LocalConfiguration.current
     val topCardHeight by remember {
@@ -192,7 +192,7 @@ fun SwapScreen(
         val modelBroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
                 val idReceived = p1!!.getIntExtra("change_model_to",model.id)
-                model = FakeDatabase().getModelFromID(idReceived).toModel()
+                model = FakeData().getModelFromID(idReceived).toModel()
             }
         }
 
@@ -212,7 +212,7 @@ fun SwapScreen(
             override fun onReceive(p0: Context?, p1: Intent?) {
                 val tokenReceived = p1?.getIntExtra("Chosen_Token_id",6)
                 tokenReceived?.let {
-                    token = FakeDatabase().getTokenFromID(it)
+                    token = FakeData().getTokenFromID(it)
                     tokenChoose = true
                 }!!
             }
@@ -795,7 +795,7 @@ fun ChangeTokenInSwap(
     val offset by viewModel.currentOffset.collectAsState()
     val secondaryColor = colorResource(id = R.color.teal_700)
     val textFont = FontFamily(Font(R.font.impact))
-    val listOfToken = FakeDatabase().getTokens()
+    val listOfToken = FakeData().getTokens()
 
     val favorite = listOfToken.subList(0,2)
     val popular = listOfToken.subList(3,4)

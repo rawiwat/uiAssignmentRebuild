@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.example.uiassignment.FakeDatabase
+import com.example.uiassignment.FakeData
 import com.example.uiassignment.R
 import com.example.uiassignment.Trait
 import com.example.uiassignment.getRandomName
@@ -59,7 +59,7 @@ fun PhotoDetail(
     navController:NavController
 ) {
     val model by remember {
-        mutableStateOf(FakeDatabase().getModelFromID(modelId).toModel())
+        mutableStateOf(FakeData().getModelFromID(modelId).toModel())
     }
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)

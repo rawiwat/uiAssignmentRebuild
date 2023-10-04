@@ -17,6 +17,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,15 +34,16 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
+import com.example.uiassignment.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    homeViewModel: HomeViewModel
 ) {
-    val dataList = FakeDatabase().getFakeData()
+    val dataList by homeViewModel.listOfModels.collectAsState()
     val scrollState = rememberScrollState()
 
     Surface(
