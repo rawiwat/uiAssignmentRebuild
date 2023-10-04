@@ -1,9 +1,7 @@
 package com.example.uiassignment.composeui
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -40,12 +38,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -70,91 +65,26 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import com.example.uiassignment.FakeData
+import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
 import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.getTokenOffset
-import com.example.uiassignment.toModel
+import com.example.uiassignment.viewmodel.NumberInputViewModel
+import com.example.uiassignment.viewmodel.TransactionViewModel
 
 @Composable
 fun Transaction(
-    textFont:FontFamily,
+    textFont: FontFamily,
     context: Context,
-    modelId: Int
+    transactionViewModel: TransactionViewModel
 ) {
-    var model by remember {
-        mutableStateOf(FakeData().getModelFromID(modelId).toModel())
-    }
+    val model by transactionViewModel.model.collectAsState()
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)
-    var sendingMoney by rememberSaveable {
-        mutableStateOf("0")
-    }
+    val numberInputViewModel = NumberInputViewModel()
+    val sendingMoney by numberInputViewModel.money.collectAsState()
     val listOfInput = listOf("1","2","3","4","5","6","7","8","9",".","0","←")
-    val singleDigitNum = listOf("0","1","2","3","4","5","6","7","8","9")
-
-    DisposableEffect(sendingMoney) {
-        val moneyBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                if (p1 != null) {
-                    val received = p1.getStringExtra("moneyEdit").toString()
-                    if (sendingMoney == "0") {
-                        if (singleDigitNum.contains(received)) {
-                            sendingMoney = received
-                        } else if (received == ".") {
-                            sendingMoney += "."
-                        }
-                    } else {
-                        if (singleDigitNum.contains(received)) {
-                            sendingMoney += received
-                        } else if (received == ".") {
-                            if (sendingMoney.contains(".")) {
-                                sendingMoney = sendingMoney.filterNot { it == '.' }
-                                sendingMoney += "."
-                            } else {
-                                sendingMoney += "."
-                            }
-                        } else if (received == "←") {
-                            if (sendingMoney.length >= 2) {
-                                sendingMoney = sendingMoney.substring(0,sendingMoney.length - 1)
-                            } else {
-                                sendingMoney = "0"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        context.registerReceiver(
-            moneyBroadcastReceiver,
-            IntentFilter("moneyEdit"),
-            Context.RECEIVER_EXPORTED
-        )
-
-        onDispose{
-            context.unregisterReceiver(moneyBroadcastReceiver)
-        }
-    }
-
-    DisposableEffect(model) {
-        val modelBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val idReceived = p1!!.getIntExtra("change_model_to",model.id)
-                model = FakeData().getModelFromID(idReceived).toModel()
-            }
-        }
-
-        context.registerReceiver(
-            modelBroadcastReceiver,
-            IntentFilter("change_model"),
-            Context.RECEIVER_EXPORTED
-        )
-
-        onDispose{
-            context.unregisterReceiver(modelBroadcastReceiver)
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -496,9 +426,9 @@ fun Transaction(
                         ) {
                             NumberPanel(
                                 value = it,
-                                context = context,
                                 textColor = primaryColor,
-                                textFont = textFont
+                                textFont = textFont,
+                                numberInputViewModel
                             )
                         }
                     }
@@ -506,7 +436,7 @@ fun Transaction(
             }
         }
     }
-    ChangeModel(context = context)
+    ChangeModel(transactionViewModel)
 }
 
 fun getRawMoneyNumber(
@@ -523,9 +453,9 @@ fun getRawMoneyNumber(
 @Composable
 fun NumberPanel(
     value: String,
-    context: Context,
     textColor: Color,
-    textFont: FontFamily
+    textFont: FontFamily,
+    numberInputViewModel: NumberInputViewModel
 ) {
     val configuration = LocalConfiguration.current
     val width = configuration.screenWidthDp / 3
@@ -536,9 +466,7 @@ fun NumberPanel(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .clickable {
-                val intent = Intent("moneyEdit")
-                intent.putExtra("moneyEdit", value)
-                context.sendBroadcast(intent)
+                numberInputViewModel.editMoney(value)
             }
             .width(width.dp)
             .height(height.dp)
@@ -556,11 +484,12 @@ fun NumberPanel(
 
 @Composable
 fun ChangeModel(
-    context:Context
+    transactionViewModel: TransactionViewModel
 ) {
     val configuration = LocalConfiguration.current
-    val viewModel = SwipeViewModel(configuration.screenHeightDp / 2, context)
-    val offset by viewModel.currentOffset.collectAsState()
+    val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
+    val offset by swipeViewModel.currentOffset.collectAsState()
+    val active by swipeViewModel.activation.collectAsState()
     val secondaryColor = colorResource(id = R.color.teal_700)
     val textFont = FontFamily(Font(R.font.impact))
     val listOfTokenImageId = listOf(
@@ -572,27 +501,6 @@ fun ChangeModel(
         R.drawable.token_unity
     )
     val padding8 = 8.dp
-    var active by remember {
-        mutableStateOf(false)
-    }
-
-    DisposableEffect(active) {
-        val activationReceiver = object : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                val activationReceived = p1!!.getBooleanExtra("change_activation_to", false)
-                active = activationReceived
-                viewModel.setOffsetToDefault()
-            }
-        }
-        context.registerReceiver(
-            activationReceiver,
-            IntentFilter("Change_activate"),
-            Context.RECEIVER_EXPORTED
-        )
-        onDispose {
-            context.unregisterReceiver(activationReceiver)
-        }
-    }
 
     AnimatedVisibility(
         visible = active,
@@ -625,7 +533,7 @@ fun ChangeModel(
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                viewModel.changeOffset(dragAmount.y.toInt())
+                                swipeViewModel.changeOffset(dragAmount.y.toInt())
                             }
                         },
                 ) {
@@ -725,7 +633,11 @@ fun ChangeModel(
                         FakeData().getModels(),
                         key = { it.id }
                     ) {
-                        ConstraintOption(model = it, context = context)
+                        ConstraintOption(
+                            model = it,
+                            transactionViewModel,
+                            swipeViewModel
+                        )
                     }
                 }
             }
@@ -758,7 +670,8 @@ fun Token(
 @Composable
 fun ConstraintOption(
     model: Model,
-    context: Context
+    transactionViewModel: TransactionViewModel,
+    swipeViewModel: SwipeViewModel
 ) {
     val primaryTextColor = colorResource(id = R.color.teal_200)
     val secondaryTextColor = colorResource(id = R.color.teal_700)
@@ -772,12 +685,8 @@ fun ConstraintOption(
             .background(color = Color.Black)
             .fillMaxWidth()
             .clickable {
-                val intent = Intent("Change_activate")
-                intent.putExtra("change_activation_to", false)
-                context.sendBroadcast(intent)
-                val changeModel = Intent("change_model")
-                changeModel.putExtra("change_model_to", model.id)
-                context.sendBroadcast(changeModel)
+                swipeViewModel.turnOff()
+                transactionViewModel.changeModel(model.id)
             }
     ) {
         val (image, name, money, num, description) = createRefs()
@@ -862,6 +771,6 @@ fun PreviewTransaction() {
     Transaction(
         textFont = FontFamily(Font(R.font.impact)),
         context = LocalContext.current,
-        modelId = 2
+        TransactionViewModel(FakeDatabase(),2)
     )
 }

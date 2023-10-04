@@ -324,7 +324,7 @@ fun InfoScreen(
             Spacer(modifier = Modifier.height(9.dp))
 
             Graph(
-                model = model, context,infoScreenViewModel
+                model = model, infoScreenViewModel
             )
 
             Spacer(modifier = Modifier.height(9.dp))
@@ -489,7 +489,6 @@ fun InfoScreen(
 @Composable
 fun Graph(
     model: Model,
-    context: Context,
     infoViewModel: InfoScreenViewModel
 ) {
     val currentOutPut by infoViewModel.graphType.collectAsState()

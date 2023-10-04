@@ -791,7 +791,7 @@ fun ChangeTokenInSwap(
     context: Context
 ) {
     val configuration = LocalConfiguration.current
-    val viewModel = SwipeViewModel(configuration.screenHeightDp / 2, context)
+    val viewModel = SwipeViewModel(configuration.screenHeightDp / 2)
     val offset by viewModel.currentOffset.collectAsState()
     val secondaryColor = colorResource(id = R.color.teal_700)
     val textFont = FontFamily(Font(R.font.impact))
