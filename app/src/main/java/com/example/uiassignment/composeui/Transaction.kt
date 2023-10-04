@@ -1,7 +1,5 @@
 package com.example.uiassignment.composeui
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -52,7 +50,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -76,14 +73,15 @@ import com.example.uiassignment.viewmodel.TransactionViewModel
 @Composable
 fun Transaction(
     textFont: FontFamily,
-    context: Context,
     transactionViewModel: TransactionViewModel
 ) {
     val model by transactionViewModel.model.collectAsState()
-    val primaryColor = colorResource(id = R.color.teal_200)
-    val secondaryColor = colorResource(id = R.color.teal_700)
     val numberInputViewModel = NumberInputViewModel()
     val sendingMoney by numberInputViewModel.money.collectAsState()
+    val configuration = LocalConfiguration.current
+    val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
+    val primaryColor = colorResource(id = R.color.teal_200)
+    val secondaryColor = colorResource(id = R.color.teal_700)
     val listOfInput = listOf("1","2","3","4","5","6","7","8","9",".","0","←")
 
     Scaffold(
@@ -231,9 +229,7 @@ fun Transaction(
                                 Card(
                                     modifier = Modifier
                                         .clickable {
-                                            val intent = Intent("Change_activate")
-                                            intent.putExtra("change_activation_to",true)
-                                            context.sendBroadcast(intent)
+                                            swipeViewModel.turnOn()
                                         },
                                     colors = CardDefaults.cardColors(
                                         containerColor = Color.Black
@@ -436,7 +432,7 @@ fun Transaction(
             }
         }
     }
-    ChangeModel(transactionViewModel)
+    ChangeModel(transactionViewModel,swipeViewModel)
 }
 
 fun getRawMoneyNumber(
@@ -484,10 +480,10 @@ fun NumberPanel(
 
 @Composable
 fun ChangeModel(
-    transactionViewModel: TransactionViewModel
+    transactionViewModel: TransactionViewModel,
+    swipeViewModel: SwipeViewModel
 ) {
     val configuration = LocalConfiguration.current
-    val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
     val offset by swipeViewModel.currentOffset.collectAsState()
     val active by swipeViewModel.activation.collectAsState()
     val secondaryColor = colorResource(id = R.color.teal_700)
@@ -770,7 +766,6 @@ fun ConstraintOption(
 fun PreviewTransaction() {
     Transaction(
         textFont = FontFamily(Font(R.font.impact)),
-        context = LocalContext.current,
         TransactionViewModel(FakeDatabase(),2)
     )
 }

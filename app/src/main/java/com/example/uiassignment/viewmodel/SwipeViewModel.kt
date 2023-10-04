@@ -38,4 +38,9 @@ class SwipeViewModel(
         _activation.value = false
         setOffsetToDefault()
     }
+
+    fun turnOn() {
+        _activation.value = true
+        setOffsetToDefault()
+    }
 }

@@ -79,6 +79,7 @@ import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.TokenModel
 import com.example.uiassignment.toModel
 import com.example.uiassignment.trimDouble
+import com.example.uiassignment.viewmodel.NumberInputViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -93,6 +94,7 @@ fun SwapScreen(
     var model by remember {
         mutableStateOf(FakeData().getModelFromID(modelId).toModel())
     }
+    val numberInputViewModel = NumberInputViewModel()
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)
     var sendingMoney by rememberSaveable {
@@ -772,9 +774,9 @@ fun SwapScreen(
                         ) {
                             NumberPanel(
                                 value = it,
-                                context = context,
                                 textColor = primaryColor,
-                                textFont = textFont
+                                textFont = textFont,
+                                numberInputViewModel
                             )
                         }
                     }

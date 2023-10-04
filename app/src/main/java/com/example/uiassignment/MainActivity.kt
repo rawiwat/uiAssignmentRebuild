@@ -28,6 +28,7 @@ import com.example.uiassignment.composeui.Archive
 import com.example.uiassignment.ui.theme.UiAssignmentTheme
  import com.example.uiassignment.viewmodel.HomeViewModel
  import com.example.uiassignment.viewmodel.InfoScreenViewModel
+ import com.example.uiassignment.viewmodel.TransactionViewModel
 
  class MainActivity : ComponentActivity() {
     private lateinit var navController: NavController
@@ -134,7 +135,8 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
              it.arguments?.let { it1 ->
                  Transaction(
                      textFont = FontFamily(Font(R.font.impact)),
-                     context = context, modelId = it1.getInt("id"))
+                     TransactionViewModel(selectedDatabase,it1.getInt("id"))
+                 )
              }
          }
 
