@@ -72,7 +72,7 @@ import coil.compose.AsyncImage
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
-import com.example.uiassignment.SwipeViewModel
+import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.getTokenOffset
 import com.example.uiassignment.toModel
 

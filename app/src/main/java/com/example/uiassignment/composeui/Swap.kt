@@ -27,9 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -42,7 +40,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -77,11 +74,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import com.example.uiassignment.FakeDatabase
-import com.example.uiassignment.Model
 import com.example.uiassignment.R
-import com.example.uiassignment.SwipeViewModel
+import com.example.uiassignment.viewmodel.SwipeViewModel
 import com.example.uiassignment.TokenModel
-import com.example.uiassignment.getTokenOffset
 import com.example.uiassignment.toModel
 import com.example.uiassignment.trimDouble
 import kotlinx.coroutines.CoroutineScope
@@ -608,7 +603,9 @@ fun SwapScreen(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(topCardHeight.dp)
                             ) {
                                 Card(
                                     colors = CardDefaults.cardColors(
@@ -657,14 +654,15 @@ fun SwapScreen(
                                 modifier = Modifier.size(15.dp)
                             )
 
+                            Spacer(modifier = Modifier.width(4.dp))
+
                             Text(
                                 text = "Restore your wallet to swap",
                                 style = TextStyle(
                                     color = Color.Yellow
                                 ),
-                                fontSize = 13.sp,
+                                fontSize = 12.sp,
                                 fontFamily = textFont,
-                                modifier = Modifier.padding(3.dp)
                             )
                         }
 
@@ -688,19 +686,43 @@ fun SwapScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (loadingResult) {
+
+                                    Spacer(modifier = Modifier.width(8.dp))
                                     CircularProgressIndicator(
                                         color = Color.Black,
                                         trackColor = Color.White,
                                         modifier = Modifier.size(15.dp)
                                     )
+
+                                    Spacer(modifier = Modifier.width(4.dp))
+
+                                    Text(
+                                        text = "fetching prices",
+                                        style = TextStyle(
+                                            color = Color.White
+                                        ),
+                                        fontSize = 12.sp,
+                                        fontFamily = textFont,
+                                    )
                                 } else {
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+
                                     Image(
                                         painter = painterResource(id = R.drawable.see_more_icon),
                                         contentDescription = null,
                                         modifier = Modifier.size(15.dp)
                                     )
+
+                                    Spacer(modifier = Modifier.width(4.dp))
+
                                     Text(
-                                        text = "1 ${model.name} = 3.14 ${token.description}"
+                                        text = "1 ${model.name} = 3.14 ${token.description}",
+                                        style = TextStyle(
+                                            color = Color.White
+                                        ),
+                                        fontSize = 12.sp,
+                                        fontFamily = textFont,
                                     )
                                 }
                             }

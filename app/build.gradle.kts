@@ -67,12 +67,24 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //chart
     implementation("co.yml:ycharts:2.1.0")
+
+    //navigation
     implementation("androidx.navigation:navigation-compose:2.7.3")
+
+    //constraintLayout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+    //coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //camera
     implementation("androidx.camera:camera-view:1.2.3")
     implementation("androidx.camera:camera-lifecycle:1.2.3")
     implementation("androidx.camera:camera-camera2:1.2.3")
+
+    //QR Code analyzer
+    implementation("com.google.android.gms:play-services-vision:20.1.3")
     implementation("com.google.zxing:core:3.3.3")
 }

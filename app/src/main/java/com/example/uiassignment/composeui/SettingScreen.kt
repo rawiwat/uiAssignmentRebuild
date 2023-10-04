@@ -39,7 +39,6 @@ fun SettingScreen(
     navController: NavController
 ) {
     val primaryTextColor = colorResource(id = R.color.teal_200)
-    val secondaryTextColor = colorResource(id = R.color.teal_700)
     val textFont = FontFamily(Font(R.font.impact))
 
     Scaffold(

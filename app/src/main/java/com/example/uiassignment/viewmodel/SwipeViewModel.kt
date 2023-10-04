@@ -1,4 +1,4 @@
-package com.example.uiassignment
+package com.example.uiassignment.viewmodel
 
 import android.content.Context
 import android.content.Intent
