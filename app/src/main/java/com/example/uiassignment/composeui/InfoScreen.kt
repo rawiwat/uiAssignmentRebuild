@@ -33,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -71,27 +72,26 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.uiassignment.FakeData
+import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.GraphOutputType
 import com.example.uiassignment.GraphSelector
-import com.example.uiassignment.LinkModel
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
-import com.example.uiassignment.StatsModel
 import com.example.uiassignment.generateAXisX
 import com.example.uiassignment.generateAxisY
 import com.example.uiassignment.getAxisXStepSize
 import com.example.uiassignment.getPointData
-import com.example.uiassignment.toModel
+import com.example.uiassignment.viewmodel.InfoScreenViewModel
 import kotlin.math.roundToInt
 
 
 @Composable
 fun InfoScreen(
-    id: Int,
     context: Context,
-    navController: NavController
+    navController: NavController,
+    infoScreenViewModel: InfoScreenViewModel
 ) {
-    val model = FakeData().getModelFromID(id).toModel()
+    val model by infoScreenViewModel.model.collectAsState()
     var readMore by remember {
         mutableStateOf(false)
     }
@@ -108,20 +108,8 @@ fun InfoScreen(
     val bodyFontSize = 14.sp
     val splitedMoney = model.current.toString().split(".")
     val bodyPadding = 5.dp
-    val statsList = listOf(
-        StatsModel("Doritos","23.15M"),
-        StatsModel("Pringle","14.16M"),
-        StatsModel("Tarkis","16.75M"),
-        StatsModel("Lays","21.15M")
-    )
-    val linkList = listOf(
-        LinkModel(imageId = R.drawable.internet_icon, name = "Website"),
-        LinkModel(imageId = R.drawable.facebook_icon, name = "Facebook"),
-        LinkModel(imageId = R.drawable.youtube_icon, name = "Youtube"),
-        LinkModel(imageId = R.drawable.twitter_icon, name = "Twitter"),
-        LinkModel(imageId = R.drawable.instagram_icon, name = "Instagram"),
-        LinkModel(imageId = R.drawable.line_icon, name = "Line")
-    )
+    val statsList by infoScreenViewModel.statsList.collectAsState()
+    val linkList by infoScreenViewModel.linkList.collectAsState()
 
     Scaffold(
         topBar = {
@@ -573,7 +561,11 @@ fun Graph(
 @Preview(showBackground = true)
 @Composable
 fun InfoPreview() {
-    InfoScreen(id = 1, LocalContext.current, navController = NavController(LocalContext.current))
+    InfoScreen(
+        LocalContext.current,
+        navController = NavController(LocalContext.current),
+        infoScreenViewModel = InfoScreenViewModel(FakeDatabase(),1)
+    )
 }
 
 fun generateChartData(

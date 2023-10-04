@@ -26,23 +26,35 @@ import com.example.uiassignment.composeui.Archive
  import com.example.uiassignment.composeui.SwapScreen
  import com.example.uiassignment.composeui.Transaction
 import com.example.uiassignment.ui.theme.UiAssignmentTheme
+ import com.example.uiassignment.viewmodel.HomeViewModel
+ import com.example.uiassignment.viewmodel.InfoScreenViewModel
 
  class MainActivity : ComponentActivity() {
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
         super.onCreate(savedInstanceState)
+        val selectedDatabase:Database = FakeDatabase()
         setContent {
             UiAssignmentTheme {
                 navController = rememberNavController()
-                App(navController as NavHostController,this@MainActivity)
+                App(
+                    navController as NavHostController,
+                    this@MainActivity,
+                    selectedDatabase
+                )
             }
         }
     }
 }
 
 
- @Composable fun App(navController: NavHostController,context: Context) {
+ @Composable
+ fun App(
+     navController: NavHostController,
+     context: Context,
+     selectedDatabase: Database
+ ) {
      val animationTime = 1200
      NavHost(
          navController = navController,
@@ -65,6 +77,7 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
          ) {
              HomeScreen(
                  navController = navController,
+                 HomeViewModel(selectedDatabase)
              )
          }
 
@@ -89,9 +102,12 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
              }
          ) {
              InfoScreen(
-                 it.arguments!!.getInt("id"),
                  context,
-                 navController
+                 navController,
+                 InfoScreenViewModel(
+                     selectedDatabase,
+                     it.arguments!!.getInt("id")
+                 )
              )
          }
 
