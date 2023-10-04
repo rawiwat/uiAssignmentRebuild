@@ -12,11 +12,9 @@ import kotlinx.coroutines.launch
 
 class TransactionViewModel(database: Database,id: Int):ViewModel() {
     private val thisDatabase = database
-    private val _listOfModels = MutableStateFlow(thisDatabase.getModels())
-    val listOfModels: StateFlow<List<Model>> = _listOfModels
     private val _model = MutableStateFlow(thisDatabase.getModelFromID(id))
     val model: StateFlow<Model> = _model
-
+    val listOfModels = thisDatabase.getModels()
     fun changeModel(id: Int) {
         _model.value = thisDatabase.getModelFromID(id)
     }

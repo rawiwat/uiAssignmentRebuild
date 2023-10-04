@@ -80,7 +80,7 @@ fun SwapScreen(
     textFont: FontFamily,
     swapViewModel: SwapViewModel
 ) {
-    val model by swapViewModel.model.collectAsState()
+    val model by remember { mutableStateOf(swapViewModel.model) }
     val numberInputViewModel = NumberInputViewModel()
     val configuration = LocalConfiguration.current
     val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
@@ -663,12 +663,13 @@ fun ChangeTokenInSwap(
     val offset by swipeViewModel.currentOffset.collectAsState()
     val secondaryColor = colorResource(id = R.color.teal_700)
     val textFont = FontFamily(Font(R.font.impact))
-    val listOfToken by swapViewModel.tokens.collectAsState()
+    val listOfToken = swapViewModel.tokens
     val active by swipeViewModel.activation.collectAsState()
-    val favorite = listOfToken.subList(0,2)
-    val popular = listOfToken.subList(3,4)
+    val favorite = swapViewModel.favoritesTokens
+    val popular = swapViewModel.popularTokens
     val padding8 by remember { mutableStateOf(8.dp) }
     val padding12 by remember { mutableStateOf(12.dp) }
+
     AnimatedVisibility(
         visible = active,
         enter = slideInVertically(

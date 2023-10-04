@@ -61,6 +61,7 @@ import com.example.uiassignment.ArchiveScreenType
 import com.example.uiassignment.Categorized
 import com.example.uiassignment.CryptoActivity
 import com.example.uiassignment.FakeData
+import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Month
 import com.example.uiassignment.R
 import com.example.uiassignment.generateRecord
@@ -68,6 +69,7 @@ import com.example.uiassignment.getImageIds
 import com.example.uiassignment.getRandomName
 import com.example.uiassignment.toModel
 import com.example.uiassignment.trimDouble2
+import com.example.uiassignment.viewmodel.ArchiveViewModel
 
 @Composable
 fun Archive(
@@ -75,13 +77,12 @@ fun Archive(
     modelId: Int,
     textFont: FontFamily,
     navController: NavController,
-    context: Context
+    context: Context,
+    archiveViewModel: ArchiveViewModel
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val size = screenWidthDp / 2
-    val model = remember(modelId) {
-        FakeData().getModelFromID(modelId).toModel()
-    }
+    val model = archiveViewModel.model
     val primaryColor = colorResource(id = R.color.teal_200)
     val secondaryColor = colorResource(id = R.color.teal_700)
     val standardPadding = 8.dp
@@ -736,6 +737,7 @@ fun PreviewArchive() {
         modelId = 1,
         textFont = FontFamily(Font(R.font.impact)),
         navController = NavController(context),
-        context = context
+        context = context,
+        archiveViewModel = ArchiveViewModel(FakeDatabase(),4)
     )
 }

@@ -8,6 +8,8 @@ interface Database {
     fun getDetailFromId(id: Int): String
     fun getStatsList(): List<StatsModel>
     fun getLinkList(): List<LinkModel>
+    fun getFavoriteTokens(): List<TokenModel>
+    fun getPopularTokens(): List<TokenModel>
 }
 
 class FakeDatabase :Database {
@@ -37,6 +39,14 @@ class FakeDatabase :Database {
 
     override fun getLinkList(): List<LinkModel> {
         return FakeData().getLinkList()
+    }
+
+    override fun getFavoriteTokens(): List<TokenModel> {
+        return FakeData().favoriteTokens()
+    }
+
+    override fun getPopularTokens(): List<TokenModel> {
+        return FakeData().popularTokens()
     }
 
 

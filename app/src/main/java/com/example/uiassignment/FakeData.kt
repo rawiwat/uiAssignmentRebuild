@@ -275,4 +275,7 @@ class FakeData {
         LinkModel(imageId = R.drawable.instagram_icon, name = "Instagram"),
         LinkModel(imageId = R.drawable.line_icon, name = "Line")
     )
+
+    fun favoriteTokens() = getTokens().subList(0,2)
+    fun popularTokens() = getTokens().subList(3,5)
 }

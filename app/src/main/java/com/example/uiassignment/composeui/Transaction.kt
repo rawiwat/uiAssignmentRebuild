@@ -625,7 +625,7 @@ fun ChangeModel(
 
                 LazyColumn {
                     items(
-                        transactionViewModel.listOfModels.value,
+                        transactionViewModel.listOfModels,
                         key = { it.id }
                     ) {
                         ConstraintOption(
