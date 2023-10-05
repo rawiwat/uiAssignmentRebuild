@@ -1,4 +1,4 @@
-package com.example.uiassignment.composeui
+package com.example.uiassignment.viewlayer.composeui
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -69,7 +69,7 @@ import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.uiassignment.Constant.Companion.primaryColor
 import com.example.uiassignment.Constant.Companion.secondaryColor
 import com.example.uiassignment.Constant.Companion.textFont
-import com.example.uiassignment.FakeData
+import com.example.uiassignment.data_layer.FakeData
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.GraphOutputType
 import com.example.uiassignment.GraphSelector
@@ -79,7 +79,7 @@ import com.example.uiassignment.generateAXisX
 import com.example.uiassignment.generateAxisY
 import com.example.uiassignment.getAxisXStepSize
 import com.example.uiassignment.getPointData
-import com.example.uiassignment.viewmodel.InfoScreenViewModel
+import com.example.uiassignment.viewlayer.composeui.viewmodel.InfoScreenViewModel
 import kotlin.math.roundToInt
 
 

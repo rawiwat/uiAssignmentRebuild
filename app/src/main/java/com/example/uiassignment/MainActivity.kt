@@ -15,21 +15,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uiassignment.composeui.HomeScreen
-import com.example.uiassignment.composeui.InfoScreen
-import com.example.uiassignment.composeui.NFTDetail
-import com.example.uiassignment.composeui.QrCodeScanner
-import com.example.uiassignment.composeui.SettingScreen
-import com.example.uiassignment.composeui.Archive
- import com.example.uiassignment.composeui.SwapScreen
- import com.example.uiassignment.composeui.Transaction
+import com.example.uiassignment.viewlayer.composeui.HomeScreen
+import com.example.uiassignment.viewlayer.composeui.InfoScreen
+import com.example.uiassignment.viewlayer.composeui.NFTDetail
+import com.example.uiassignment.viewlayer.composeui.QrCodeScanner
+import com.example.uiassignment.viewlayer.composeui.SettingScreen
+import com.example.uiassignment.viewlayer.composeui.Archive
+ import com.example.uiassignment.viewlayer.composeui.SwapScreen
+ import com.example.uiassignment.viewlayer.composeui.Transaction
 import com.example.uiassignment.ui.theme.UiAssignmentTheme
- import com.example.uiassignment.viewmodel.ArchiveViewModel
- import com.example.uiassignment.viewmodel.HomeViewModel
- import com.example.uiassignment.viewmodel.InfoScreenViewModel
- import com.example.uiassignment.viewmodel.NFTDetailViewModel
- import com.example.uiassignment.viewmodel.SwapViewModel
- import com.example.uiassignment.viewmodel.TransactionViewModel
+ import com.example.uiassignment.viewlayer.composeui.viewmodel.ArchiveViewModel
+ import com.example.uiassignment.viewlayer.composeui.viewmodel.HomeViewModel
+ import com.example.uiassignment.viewlayer.composeui.viewmodel.InfoScreenViewModel
+ import com.example.uiassignment.viewlayer.composeui.viewmodel.NFTDetailViewModel
+ import com.example.uiassignment.viewlayer.composeui.viewmodel.SwapViewModel
+ import com.example.uiassignment.viewlayer.composeui.viewmodel.TransactionViewModel
 
  class MainActivity : ComponentActivity() {
     private lateinit var navController: NavController
@@ -148,7 +148,10 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
              if (it.arguments!=null) {
                  Archive(
                      navController = navController,
-                     archiveViewModel = ArchiveViewModel(selectedDatabase,it.arguments!!.getInt("id"))
+                     archiveViewModel = ArchiveViewModel(
+                         selectedDatabase,
+                         it.arguments!!.getInt("id")
+                     )
                  )
              }
          }

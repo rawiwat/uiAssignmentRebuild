@@ -1,4 +1,4 @@
-package com.example.uiassignment.composeui
+package com.example.uiassignment.viewlayer.composeui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

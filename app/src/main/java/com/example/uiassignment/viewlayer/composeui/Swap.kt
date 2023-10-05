@@ -1,4 +1,4 @@
-package com.example.uiassignment.composeui
+package com.example.uiassignment.viewlayer.composeui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -74,9 +74,9 @@ import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.R
 import com.example.uiassignment.TokenModel
 import com.example.uiassignment.trimDouble
-import com.example.uiassignment.viewmodel.NumberInputViewModel
-import com.example.uiassignment.viewmodel.SwapViewModel
-import com.example.uiassignment.viewmodel.SwipeViewModel
+import com.example.uiassignment.viewlayer.composeui.viewmodel.NumberInputViewModel
+import com.example.uiassignment.viewlayer.composeui.viewmodel.SwapViewModel
+import com.example.uiassignment.viewlayer.composeui.viewmodel.SwipeViewModel
 
 @Composable
 fun SwapScreen(

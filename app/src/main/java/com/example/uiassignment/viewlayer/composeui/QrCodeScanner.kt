@@ -1,4 +1,4 @@
-package com.example.uiassignment.composeui
+package com.example.uiassignment.viewlayer.composeui
 
 import android.Manifest
 import android.content.Context

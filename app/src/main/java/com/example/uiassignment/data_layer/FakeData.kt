@@ -1,8 +1,19 @@
-package com.example.uiassignment
+package com.example.uiassignment.data_layer
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import co.yml.charts.common.model.Point
+import com.example.uiassignment.LinkModel
+import com.example.uiassignment.MainActivity
+import com.example.uiassignment.Model
+import com.example.uiassignment.NFT
+import com.example.uiassignment.R
+import com.example.uiassignment.StatsModel
+import com.example.uiassignment.TokenModel
+import com.example.uiassignment.generateTraits
+import com.example.uiassignment.getImageIds
+import com.example.uiassignment.getRandomName
+import com.example.uiassignment.trimDouble2
 import kotlin.random.Random
 
 class FakeData {
@@ -323,7 +334,7 @@ class FakeData {
         return result
     }
 
-    fun getNFTFromID(id: Int):NFT {
+    fun getNFTFromID(id: Int): NFT {
         for (NFT in getNFTs()) {
             if (NFT.id == id) {
                 return NFT

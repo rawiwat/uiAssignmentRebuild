@@ -1,4 +1,4 @@
-package com.example.uiassignment.composeui
+package com.example.uiassignment.viewlayer.composeui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,7 +49,7 @@ import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.R
 import com.example.uiassignment.TraitType
 import com.example.uiassignment.traitsValueGenerator
-import com.example.uiassignment.viewmodel.NFTDetailViewModel
+import com.example.uiassignment.viewlayer.composeui.viewmodel.NFTDetailViewModel
 
 @Composable
 fun NFTDetail(

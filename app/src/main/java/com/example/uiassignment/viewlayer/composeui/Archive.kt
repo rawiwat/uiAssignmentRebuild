@@ -1,4 +1,4 @@
-package com.example.uiassignment.composeui
+package com.example.uiassignment.viewlayer.composeui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -67,7 +67,7 @@ import com.example.uiassignment.Month
 import com.example.uiassignment.NFT
 import com.example.uiassignment.R
 import com.example.uiassignment.TokenModel
-import com.example.uiassignment.viewmodel.ArchiveViewModel
+import com.example.uiassignment.viewlayer.composeui.viewmodel.ArchiveViewModel
 
 @Composable
 fun Archive(

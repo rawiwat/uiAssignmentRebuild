@@ -1,4 +1,4 @@
-package com.example.uiassignment.viewmodel
+package com.example.uiassignment.viewlayer.composeui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.uiassignment.ArchiveScreenType
