@@ -1,4 +1,4 @@
-package com.example.uiassignment
+package com.example.uiassignment.miscellaneous
 
 import android.graphics.ImageFormat
 import androidx.camera.core.ImageAnalysis

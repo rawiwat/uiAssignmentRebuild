@@ -1,8 +1,8 @@
 package com.example.uiassignment.viewlayer.composeui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.uiassignment.Database
-import com.example.uiassignment.TokenModel
+import com.example.uiassignment.data_layer.Database
+import com.example.uiassignment.miscellaneous.TokenModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

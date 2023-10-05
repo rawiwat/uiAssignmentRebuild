@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.uiassignment.Model
+import com.example.uiassignment.miscellaneous.Model
 import com.example.uiassignment.R
 import com.example.uiassignment.viewlayer.composeui.viewmodel.HomeViewModel
 

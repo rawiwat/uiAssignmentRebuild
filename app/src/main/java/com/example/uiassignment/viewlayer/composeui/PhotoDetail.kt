@@ -43,12 +43,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.example.uiassignment.Constant.Companion.primaryColor
-import com.example.uiassignment.Constant.Companion.secondaryColor
-import com.example.uiassignment.Constant.Companion.textFont
+import com.example.uiassignment.miscellaneous.Constant.Companion.primaryColor
+import com.example.uiassignment.miscellaneous.Constant.Companion.secondaryColor
+import com.example.uiassignment.miscellaneous.Constant.Companion.textFont
 import com.example.uiassignment.R
-import com.example.uiassignment.TraitType
-import com.example.uiassignment.traitsValueGenerator
+import com.example.uiassignment.miscellaneous.TraitType
+import com.example.uiassignment.miscellaneous.traitsValueGenerator
 import com.example.uiassignment.viewlayer.composeui.viewmodel.NFTDetailViewModel
 
 @Composable

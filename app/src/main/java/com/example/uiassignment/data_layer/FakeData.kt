@@ -3,17 +3,17 @@ package com.example.uiassignment.data_layer
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import co.yml.charts.common.model.Point
-import com.example.uiassignment.LinkModel
+import com.example.uiassignment.miscellaneous.LinkModel
 import com.example.uiassignment.MainActivity
-import com.example.uiassignment.Model
-import com.example.uiassignment.NFT
+import com.example.uiassignment.miscellaneous.Model
+import com.example.uiassignment.miscellaneous.NFT
 import com.example.uiassignment.R
-import com.example.uiassignment.StatsModel
-import com.example.uiassignment.TokenModel
-import com.example.uiassignment.generateTraits
-import com.example.uiassignment.getImageIds
-import com.example.uiassignment.getRandomName
-import com.example.uiassignment.trimDouble2
+import com.example.uiassignment.miscellaneous.StatsModel
+import com.example.uiassignment.miscellaneous.TokenModel
+import com.example.uiassignment.miscellaneous.generateTraits
+import com.example.uiassignment.miscellaneous.getImageIds
+import com.example.uiassignment.miscellaneous.getRandomName
+import com.example.uiassignment.miscellaneous.trimDouble2
 import kotlin.random.Random
 
 class FakeData {

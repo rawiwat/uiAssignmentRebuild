@@ -1,4 +1,4 @@
-package com.example.uiassignment
+package com.example.uiassignment.miscellaneous
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
@@ -7,6 +7,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
+import com.example.uiassignment.MainActivity
+import com.example.uiassignment.R
 import java.util.SortedMap
 import kotlin.random.Random
 
@@ -198,7 +200,7 @@ enum class ActivityTypes(val typeName: String) {
     APPROVED("Approved")
 }
 
-fun generateActivityDetail(type:ActivityTypes):String {
+fun generateActivityDetail(type: ActivityTypes):String {
     val currency = listOf("ETH","BCC","BCH","BTC","DASH","ZEC","USDC")
     return when(type) {
         ActivityTypes.SENT -> listOf("${getRandomName()} #${Random.nextInt(0,9999)} to ${getRandomName()}","${trimDouble3(Random.nextDouble(0.001,2.0))} ${currency.random()} to ${getRandomName()}").random()

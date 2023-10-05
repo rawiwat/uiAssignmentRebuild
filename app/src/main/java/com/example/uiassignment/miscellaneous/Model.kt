@@ -1,4 +1,4 @@
-package com.example.uiassignment
+package com.example.uiassignment.miscellaneous
 
 
 import androidx.compose.runtime.Immutable

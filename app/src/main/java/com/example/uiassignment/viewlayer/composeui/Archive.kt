@@ -56,17 +56,17 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.uiassignment.ArchiveScreenType
-import com.example.uiassignment.Categorized
-import com.example.uiassignment.Constant.Companion.primaryColor
-import com.example.uiassignment.Constant.Companion.secondaryColor
-import com.example.uiassignment.Constant.Companion.textFont
-import com.example.uiassignment.CryptoActivity
-import com.example.uiassignment.FakeDatabase
-import com.example.uiassignment.Month
-import com.example.uiassignment.NFT
+import com.example.uiassignment.miscellaneous.ArchiveScreenType
+import com.example.uiassignment.miscellaneous.Categorized
+import com.example.uiassignment.miscellaneous.Constant.Companion.primaryColor
+import com.example.uiassignment.miscellaneous.Constant.Companion.secondaryColor
+import com.example.uiassignment.miscellaneous.Constant.Companion.textFont
+import com.example.uiassignment.miscellaneous.CryptoActivity
+import com.example.uiassignment.data_layer.FakeDatabase
+import com.example.uiassignment.miscellaneous.Month
+import com.example.uiassignment.miscellaneous.NFT
 import com.example.uiassignment.R
-import com.example.uiassignment.TokenModel
+import com.example.uiassignment.miscellaneous.TokenModel
 import com.example.uiassignment.viewlayer.composeui.viewmodel.ArchiveViewModel
 
 @Composable

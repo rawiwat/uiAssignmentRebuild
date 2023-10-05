@@ -15,7 +15,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uiassignment.viewlayer.composeui.HomeScreen
+ import com.example.uiassignment.data_layer.Database
+ import com.example.uiassignment.data_layer.FakeDatabase
+ import com.example.uiassignment.viewlayer.composeui.HomeScreen
 import com.example.uiassignment.viewlayer.composeui.InfoScreen
 import com.example.uiassignment.viewlayer.composeui.NFTDetail
 import com.example.uiassignment.viewlayer.composeui.QrCodeScanner
@@ -36,7 +38,7 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
     override fun onCreate(savedInstanceState: Bundle?) {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
         super.onCreate(savedInstanceState)
-        val selectedDatabase:Database = FakeDatabase()
+        val selectedDatabase: Database = FakeDatabase()
         setContent {
             UiAssignmentTheme {
                 navController = rememberNavController()

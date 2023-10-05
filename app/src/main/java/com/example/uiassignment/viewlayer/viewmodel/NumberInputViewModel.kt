@@ -2,7 +2,7 @@ package com.example.uiassignment.viewlayer.composeui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.uiassignment.trimDouble
+import com.example.uiassignment.miscellaneous.trimDouble
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

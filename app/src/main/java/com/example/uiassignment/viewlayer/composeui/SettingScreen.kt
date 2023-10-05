@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.uiassignment.Constant.Companion.primaryColor
-import com.example.uiassignment.Constant.Companion.secondaryColor
-import com.example.uiassignment.Constant.Companion.textFont
+import com.example.uiassignment.miscellaneous.Constant.Companion.primaryColor
+import com.example.uiassignment.miscellaneous.Constant.Companion.secondaryColor
+import com.example.uiassignment.miscellaneous.Constant.Companion.textFont
 import com.example.uiassignment.R
-import com.example.uiassignment.walletCode
+import com.example.uiassignment.miscellaneous.walletCode
 
 @Composable
 fun SettingScreen(

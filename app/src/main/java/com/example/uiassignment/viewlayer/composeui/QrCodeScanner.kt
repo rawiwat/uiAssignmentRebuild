@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
-import com.example.uiassignment.QrCodeAnalyzer
+import com.example.uiassignment.miscellaneous.QrCodeAnalyzer
 import com.example.uiassignment.R
 
 

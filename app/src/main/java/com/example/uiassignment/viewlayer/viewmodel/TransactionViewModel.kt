@@ -1,16 +1,12 @@
 package com.example.uiassignment.viewlayer.composeui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.uiassignment.Database
-import com.example.uiassignment.Model
-import com.example.uiassignment.trimDouble
-import kotlinx.coroutines.delay
+import com.example.uiassignment.data_layer.Database
+import com.example.uiassignment.miscellaneous.Model
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
-class TransactionViewModel(database: Database,id: Int):ViewModel() {
+class TransactionViewModel(database: Database, id: Int):ViewModel() {
     private val thisDatabase = database
     private val _model = MutableStateFlow(thisDatabase.getModelFromID(id))
     val model: StateFlow<Model> = _model
