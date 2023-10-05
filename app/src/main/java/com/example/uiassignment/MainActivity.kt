@@ -104,7 +104,6 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
              }
          ) {
              InfoScreen(
-                 context,
                  navController,
                  InfoScreenViewModel(
                      selectedDatabase,

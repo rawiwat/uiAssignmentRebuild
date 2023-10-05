@@ -1,6 +1,5 @@
 package com.example.uiassignment.composeui
 
-import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -67,6 +66,9 @@ import co.yml.charts.ui.linechart.model.LineType
 import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
+import com.example.uiassignment.Constant.Companion.primaryColor
+import com.example.uiassignment.Constant.Companion.secondaryColor
+import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.FakeData
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.GraphOutputType
@@ -83,24 +85,15 @@ import kotlin.math.roundToInt
 
 @Composable
 fun InfoScreen(
-    context: Context,
     navController: NavController,
     infoScreenViewModel: InfoScreenViewModel
 ) {
     val model by infoScreenViewModel.model.collectAsState()
-    var readMore by remember {
-        mutableStateOf(false)
-    }
+    var readMore by remember { mutableStateOf(false) }
     val offsetX by remember { mutableFloatStateOf(0f) }
     val screenScrollState = rememberScrollState()
-
-    var isFavorite by remember {
-        mutableStateOf(false)
-    }
+    var isFavorite by remember { mutableStateOf(false) }
     val topIconSize = 20.dp
-    val primaryColor = colorResource(id = R.color.teal_200)
-    val secondaryColor = colorResource(id = R.color.teal_700)
-    val textFont = FontFamily(Font(R.font.impact))
     val bodyFontSize = 14.sp
     val splitedMoney = model.current.toString().split(".")
     val bodyPadding = 5.dp
@@ -543,7 +536,6 @@ fun Graph(
 @Composable
 fun InfoPreview() {
     InfoScreen(
-        LocalContext.current,
         navController = NavController(LocalContext.current),
         infoScreenViewModel = InfoScreenViewModel(FakeDatabase(),1)
     )

@@ -1,6 +1,11 @@
 package com.example.uiassignment
 
 import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
@@ -281,4 +286,12 @@ fun walletCode(walletName: String): String {
         hash = (hash * 31 + char.toInt()) % Int.MAX_VALUE
     }
     return hash.toString()
+}
+
+class Constant {
+    companion object {
+        val primaryColor = Color(0xFF03DAC5)
+        val secondaryColor = Color(0xFF018786)
+        val textFont = FontFamily(Font(R.font.impact))
+    }
 }

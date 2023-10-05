@@ -28,13 +28,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,18 +56,20 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.example.uiassignment.ArchiveScreenType
 import com.example.uiassignment.Categorized
+import com.example.uiassignment.Constant.Companion.primaryColor
+import com.example.uiassignment.Constant.Companion.secondaryColor
+import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.CryptoActivity
-import com.example.uiassignment.FakeData
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Month
 import com.example.uiassignment.R
-import com.example.uiassignment.generateRecord
 import com.example.uiassignment.getImageIds
 import com.example.uiassignment.getRandomName
-import com.example.uiassignment.toModel
 import com.example.uiassignment.trimDouble2
 import com.example.uiassignment.viewmodel.ArchiveViewModel
 
@@ -83,25 +85,15 @@ fun Archive(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val size = screenWidthDp / 2
     val model = archiveViewModel.model
-    val primaryColor = colorResource(id = R.color.teal_200)
-    val secondaryColor = colorResource(id = R.color.teal_700)
-    val standardPadding = 8.dp
+    val standardPadding by remember { mutableStateOf(8.dp) }
     val splitedMoney = model.current.toString().split(".")
 
-    var mode by rememberSaveable {
-        mutableStateOf(ArchiveScreenType.ACTIVITY)
-    }
-    val record by rememberSaveable {
-        mutableStateOf(generateRecord().map {
-            Categorized(
-                month = it.key.toString(),
-                activities = it.value
-            )
-        })
-    }
+    val mode by archiveViewModel.mode.collectAsState()
+    val record = archiveViewModel.records
 
-    val screen70 = screenWidthDp * 7 / 10
-    val screen30 = screenWidthDp * 3 / 10
+    val screen70 by remember { mutableIntStateOf(screenWidthDp * 7 / 10) }
+    val screen30 by remember { mutableIntStateOf(screenWidthDp * 3 / 10) }
+
     Scaffold(
         topBar = {
             Column(
@@ -230,50 +222,29 @@ fun Archive(
 
                     Spacer(modifier = Modifier.width(standardPadding))
 
-                    Text(
-                        text = "Tokens",
-                        style = TextStyle(
-                            color = if (mode == ArchiveScreenType.TOKEN)
-                                primaryColor
-                            else secondaryColor
-                        ),
-                        fontFamily = textFont,
-                        fontSize = 15.sp,
-                        modifier = Modifier.clickable {
-                            mode = ArchiveScreenType.TOKEN
-                        }
+                    ModeChangeText(
+                        archiveViewModel = archiveViewModel,
+                        currentMode = mode,
+                        thisMode = ArchiveScreenType.TOKEN,
+                        text = "Tokens"
                     )
 
                     Spacer(modifier = Modifier.width(standardPadding))
 
-                    Text(
-                        text = "NFTs",
-                        style = TextStyle(
-                            color = if (mode == ArchiveScreenType.NFTS)
-                                primaryColor
-                            else secondaryColor
-                        ),
-                        fontFamily = textFont,
-                        fontSize = 15.sp,
-                        modifier = Modifier.clickable {
-                            mode = ArchiveScreenType.NFTS
-                        }
+                    ModeChangeText(
+                        archiveViewModel = archiveViewModel,
+                        currentMode = mode,
+                        thisMode = ArchiveScreenType.NFTS,
+                        text = "NFTs"
                     )
 
                     Spacer(modifier = Modifier.width(standardPadding))
 
-                    Text(
-                        text = "Activity",
-                        style = TextStyle(
-                            color = if (mode == ArchiveScreenType.ACTIVITY)
-                                primaryColor
-                            else secondaryColor
-                        ),
-                        fontFamily = textFont,
-                        fontSize = 15.sp,
-                        modifier = Modifier.clickable {
-                            mode = ArchiveScreenType.ACTIVITY
-                        }
+                    ModeChangeText(
+                        archiveViewModel = archiveViewModel,
+                        currentMode = mode,
+                        thisMode = ArchiveScreenType.ACTIVITY,
+                        text = "Activities"
                     )
                 }
             }
@@ -409,11 +380,10 @@ fun PhotoInGallery(
             .size(size.dp)
             .padding(5.dp)
     ) {
-        val painter = rememberImagePainter(
-            data = imageId,
-            builder = {
+        val painter = rememberAsyncImagePainter(
+            ImageRequest.Builder(LocalContext.current).data(data = imageId).apply(block = fun ImageRequest.Builder.() {
                 crossfade(500)
-            }
+            }).build()
         )
 
         val painterState = painter.state
@@ -619,9 +589,6 @@ fun Records(
 fun RandomToken(
     context: Context
 ) {
-    val primaryTextColor = colorResource(id = R.color.teal_200)
-    val secondaryTextColor = colorResource(id = R.color.teal_700)
-    val textFont = FontFamily(Font(R.font.impact))
     val topFontSize = 16.sp
     val bottomFontSize = 14.sp
     val imageId by remember { mutableIntStateOf(getImageIds(context = context).random()) }
@@ -660,7 +627,7 @@ fun RandomToken(
             text = tokenName,
             fontSize = topFontSize,
             style = TextStyle(
-                color = primaryTextColor
+                color = primaryColor
             ),
             fontFamily = textFont,
             modifier = Modifier.constrainAs(name) {
@@ -673,7 +640,7 @@ fun RandomToken(
         Text(
             text = "$$tokenMoney",
             style = TextStyle(
-                color = primaryTextColor
+                color = primaryColor
             ),
             fontFamily = textFont,
             fontSize = topFontSize,
@@ -688,7 +655,7 @@ fun RandomToken(
             text = tokenDescription,
             fontSize = bottomFontSize,
             style = TextStyle(
-                color = secondaryTextColor
+                color = secondaryColor
             ),
             fontFamily = textFont,
             modifier = Modifier.constrainAs(description) {
@@ -715,7 +682,7 @@ fun RandomToken(
         Text(
             text = "$tokenPercent%",
             style = TextStyle(
-                color = secondaryTextColor
+                color = secondaryColor
             ),
             fontFamily = textFont,
             fontSize = bottomFontSize,
@@ -726,6 +693,28 @@ fun RandomToken(
             }
         )
     }
+}
+
+@Composable
+fun ModeChangeText(
+    archiveViewModel: ArchiveViewModel,
+    currentMode: ArchiveScreenType,
+    thisMode: ArchiveScreenType,
+    text: String,
+) {
+    Text(
+        text = text,
+        style = TextStyle(
+            color = if (currentMode == thisMode)
+                primaryColor
+            else secondaryColor
+        ),
+        fontFamily = textFont,
+        fontSize = 15.sp,
+        modifier = Modifier.clickable {
+            archiveViewModel.changeMode(thisMode)
+        }
+    )
 }
 
 @Preview
