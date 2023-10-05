@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -31,6 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.uiassignment.Constant.Companion.primaryColor
+import com.example.uiassignment.Constant.Companion.secondaryColor
+import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.R
 import com.example.uiassignment.walletCode
 
@@ -38,9 +40,6 @@ import com.example.uiassignment.walletCode
 fun SettingScreen(
     navController: NavController
 ) {
-    val primaryTextColor = colorResource(id = R.color.teal_200)
-    val textFont = FontFamily(Font(R.font.impact))
-
     Scaffold(
         topBar = {
             ConstraintLayout(
@@ -68,7 +67,7 @@ fun SettingScreen(
                     text = "Settings",
                     fontSize = 16.sp,
                     style = TextStyle(
-                        color = primaryTextColor
+                        color = primaryColor
                     ),
                     fontFamily = textFont,
                     modifier = Modifier.constrainAs(settingText) {
@@ -140,7 +139,7 @@ fun SettingScreen(
                     style = TextStyle(
                         color = Color.DarkGray
                     ),
-                    fontFamily = FontFamily(Font(R.font.impact)),
+                    fontFamily = textFont,
                     modifier = Modifier.padding(start = 15.dp)
                 )
             }
@@ -155,7 +154,7 @@ fun SettingHeader(text: String) {
         text = text,
         fontSize = 16.sp,
         style = TextStyle(
-            color = colorResource(id = R.color.teal_700)
+            color = secondaryColor
         ),
         fontFamily = FontFamily(Font(R.font.impact)),
         modifier = Modifier.padding(start = 15.dp)
@@ -195,7 +194,7 @@ fun SettingBody(
             style = TextStyle(
                 color = Color.White
             ),
-            fontFamily = FontFamily(Font(R.font.impact)),
+            fontFamily = textFont,
             modifier = Modifier.constrainAs(mainText) {
                 start.linkTo(image.end, margin = 8.dp)
                 bottom.linkTo(parent.bottom)
@@ -220,9 +219,9 @@ fun SettingBody(
             text = endText,
             fontSize = 13.sp,
             style = TextStyle(
-                color = colorResource(id = R.color.teal_700)
+                color = secondaryColor
             ),
-            fontFamily = FontFamily(Font(R.font.impact)),
+            fontFamily = textFont,
             modifier = Modifier.constrainAs(secondText) {
                 end.linkTo(arrow.start, margin = 8.dp)
                 bottom.linkTo(parent.bottom)
@@ -267,7 +266,7 @@ fun SettingWallet(
             style = TextStyle(
                 color = Color.White
             ),
-            fontFamily = FontFamily(Font(R.font.impact)),
+            fontFamily = textFont,
             modifier = Modifier.constrainAs(mainText) {
                 start.linkTo(image.end, margin = 8.dp)
                 bottom.linkTo(secondText.top)
@@ -292,9 +291,9 @@ fun SettingWallet(
             text = walletId,
             fontSize = 12.sp,
             style = TextStyle(
-                color = colorResource(id = R.color.teal_700)
+                color = secondaryColor
             ),
-            fontFamily = FontFamily(Font(R.font.impact)),
+            fontFamily = textFont,
             modifier = Modifier.constrainAs(secondText) {
                 bottom.linkTo(parent.bottom, margin = 8.dp)
                 top.linkTo(mainText.bottom)

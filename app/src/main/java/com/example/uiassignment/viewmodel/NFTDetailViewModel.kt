@@ -10,5 +10,4 @@ class NFTDetailViewModel(
 ): ViewModel() {
     val model = database.getModelFromID(modelId)
     val nft = database.getNFTFromId(nftId)
-
 }
