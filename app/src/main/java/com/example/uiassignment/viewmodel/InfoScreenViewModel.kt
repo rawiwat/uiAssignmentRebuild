@@ -12,14 +12,11 @@ import kotlinx.coroutines.flow.StateFlow
 class InfoScreenViewModel(
     database: Database,id:Int
 ): ViewModel() {
-    private val _model = MutableStateFlow(database.getModelFromID(id))
-    val model: StateFlow<Model> = _model
+    val model = database.getModelFromID(id)
 
-    private val _statsList = MutableStateFlow(database.getStatsList())
-    val statsList: StateFlow<List<StatsModel>> = _statsList
+    val statsList = database.getStatsList()
 
-    private val _linkList = MutableStateFlow(database.getLinkList())
-    val linkList: StateFlow<List<LinkModel>> = _linkList
+    val linkList = database.getLinkList()
 
     private var _graphType = MutableStateFlow(GraphOutputType.WEEK)
     val graphType: StateFlow<GraphOutputType> = _graphType

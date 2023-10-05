@@ -2,11 +2,8 @@ package com.example.uiassignment
 
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import co.yml.charts.common.model.Point
-import co.yml.charts.ui.linechart.model.LineChartData
 
 @Immutable
 data class Model(
@@ -91,7 +88,8 @@ data class CryptoActivity(
     val type: String,
     val detail: String,
     val time: Time,
-    val id: Int
+    val id: Int,
+    val imageId: Int
 )
 
 @Immutable
@@ -100,6 +98,23 @@ data class TokenModel(
     val name: String,
     val current: Double,
     val growthPercent: Double,
+    val positiveGrowth:Boolean,
     val description: String,
+    val imageId: Int
+)
+
+@Immutable
+data class Trait(
+    val type: TraitType,
+    val detail: String
+)
+
+@Immutable
+data class NFT(
+    val id:Int,
+    val name:String,
     val imageId: Int,
+    val tagNumber: Int,
+    val description: String,
+    val traits: List<Trait>
 )

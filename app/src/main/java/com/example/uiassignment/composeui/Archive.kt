@@ -1,6 +1,5 @@
 package com.example.uiassignment.composeui
 
-import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,7 +33,6 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +55,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.uiassignment.ArchiveScreenType
 import com.example.uiassignment.Categorized
@@ -67,19 +64,14 @@ import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.CryptoActivity
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Month
+import com.example.uiassignment.NFT
 import com.example.uiassignment.R
-import com.example.uiassignment.getImageIds
-import com.example.uiassignment.getRandomName
-import com.example.uiassignment.trimDouble2
+import com.example.uiassignment.TokenModel
 import com.example.uiassignment.viewmodel.ArchiveViewModel
 
 @Composable
 fun Archive(
-    images: List<Int>,
-    modelId: Int,
-    textFont: FontFamily,
     navController: NavController,
-    context: Context,
     archiveViewModel: ArchiveViewModel
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -90,7 +82,8 @@ fun Archive(
 
     val mode by archiveViewModel.mode.collectAsState()
     val record = archiveViewModel.records
-
+    val archivedToken = archiveViewModel.archivedTokens
+    val nfts = archiveViewModel.nfts
     val screen70 by remember { mutableIntStateOf(screenWidthDp * 7 / 10) }
     val screen30 by remember { mutableIntStateOf(screenWidthDp * 3 / 10) }
 
@@ -300,7 +293,7 @@ fun Archive(
                             end = 8.dp
                         )
                         .clickable {
-                            navController.navigate("Swap/$modelId")
+                            navController.navigate("Swap/${model.id}")
                         },
                     colors = CardDefaults.cardColors(
                         contentColor = Color.White,
@@ -333,8 +326,11 @@ fun Archive(
             when(mode) {
                 ArchiveScreenType.TOKEN -> {
                     LazyColumn {
-                        items(20) {
-                            RandomToken(context = context)
+                        items(
+                            archivedToken,
+                            key = { it.id }
+                        ) {
+                            ArchivedToken(it)
                         }
                     }
                 }
@@ -343,15 +339,12 @@ fun Archive(
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2)
                     ) {
-                        items(
-                            images,
-                            key = { it }
-                        ) {
-                            PhotoInGallery(
-                                imageId = it,
+                        items(nfts) {
+                            ArchivedNFTs(
+                                nft = it,
                                 size = size,
                                 navController = navController,
-                                modelId = modelId
+                                modelId = model.id
                             )
                         }
                     }
@@ -359,8 +352,7 @@ fun Archive(
 
                 ArchiveScreenType.ACTIVITY ->
                     Records(
-                        category = record,
-                        imagesIds = images
+                        category = record
                     )
             }
         }
@@ -369,11 +361,11 @@ fun Archive(
 }
 
 @Composable
-fun PhotoInGallery(
-    imageId:Int,
-    size:Int,
+fun ArchivedNFTs(
+    size: Int,
     navController: NavController,
-    modelId: Int
+    modelId: Int,
+    nft: NFT
 ) {
     Card(
         modifier = Modifier
@@ -381,7 +373,7 @@ fun PhotoInGallery(
             .padding(5.dp)
     ) {
         val painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current).data(data = imageId).apply(block = fun ImageRequest.Builder.() {
+            ImageRequest.Builder(LocalContext.current).data(data = nft.imageId).apply(block = fun ImageRequest.Builder.() {
                 crossfade(500)
             }).build()
         )
@@ -398,7 +390,7 @@ fun PhotoInGallery(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable {
-                        navController.navigate("PhotoDetail/$modelId/$imageId")
+                        navController.navigate("PhotoDetail/$modelId/${nft.imageId}")
                     },
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
@@ -470,12 +462,8 @@ fun MonthHeader(text: String) {
 
 @Composable
 fun ActivityUI(
-    activity: CryptoActivity,
-    imageId: Int
+    activity: CryptoActivity
 ) {
-    val primaryTextColor = colorResource(id = R.color.teal_200)
-    val secondaryTextColor = colorResource(id = R.color.teal_700)
-    val textFont = FontFamily(Font(R.font.impact))
     val topFontSize = 16.sp
     val bottomFontSize = 14.sp
     val activityTime = if (activity.time.date.month == Month.Today) {
@@ -493,7 +481,7 @@ fun ActivityUI(
         val (image, type, time, detail) = createRefs()
 
         AsyncImage(
-            model = imageId,
+            model = activity.imageId,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center,
@@ -511,7 +499,7 @@ fun ActivityUI(
             text = activity.type,
             fontSize = topFontSize,
             style = TextStyle(
-                color = primaryTextColor
+                color = primaryColor
             ),
             fontFamily = textFont,
             modifier = Modifier.constrainAs(type) {
@@ -524,7 +512,7 @@ fun ActivityUI(
         Text(
             text = activityTime,
             style = TextStyle(
-                color = primaryTextColor
+                color = primaryColor
             ),
             fontFamily = textFont,
             fontSize = topFontSize,
@@ -539,7 +527,7 @@ fun ActivityUI(
             text = activity.detail,
             fontSize = bottomFontSize,
             style = TextStyle(
-                color = secondaryTextColor
+                color = secondaryColor
             ),
             fontFamily = textFont,
             modifier = Modifier.constrainAs(detail) {
@@ -554,8 +542,7 @@ fun ActivityUI(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Records(
-    category: List<Categorized>,
-    imagesIds: List<Int>
+    category: List<Categorized>
 ) {
     LazyColumn {
         category.forEach {
@@ -573,33 +560,24 @@ fun Records(
                 sortedActivities,
                 key = { it.id }
             ) { activity ->
-                val imageId by rememberSaveable {
-                    mutableIntStateOf(imagesIds.random())
-                }
-                ActivityUI(
-                    activity = activity,
-                    imageId = imageId
-                )
+                ActivityUI(activity = activity)
             }
         }
     }
 }
 
 @Composable
-fun RandomToken(
-    context: Context
+fun ArchivedToken(
+    token: TokenModel
 ) {
     val topFontSize = 16.sp
     val bottomFontSize = 14.sp
-    val imageId by remember { mutableIntStateOf(getImageIds(context = context).random()) }
-    val tokenName by remember { mutableStateOf(getRandomName()) }
-    val tokenDescription by remember { mutableStateOf(getRandomName()) }
-    val tokenMoney by remember {
-        mutableDoubleStateOf(trimDouble2(kotlin.random.Random.nextDouble(1.0,70.0)))
-    }
-    val tokenPercent by remember {
-        mutableDoubleStateOf(trimDouble2(kotlin.random.Random.nextDouble(0.01,7.0)))
-    }
+    val imageId by remember { mutableIntStateOf(token.imageId) }
+    val tokenName by remember { mutableStateOf(token.name) }
+    val tokenDescription by remember { mutableStateOf(token.description) }
+    val tokenMoney by remember { mutableDoubleStateOf(token.current) }
+    val tokenPercent by remember { mutableDoubleStateOf(token.growthPercent) }
+
     ConstraintLayout(
         modifier = Modifier
             .height(75.dp)
@@ -722,11 +700,7 @@ fun ModeChangeText(
 fun PreviewArchive() {
     val context = LocalContext.current
     Archive(
-        images = getImageIds(context),
-        modelId = 1,
-        textFont = FontFamily(Font(R.font.impact)),
         navController = NavController(context),
-        context = context,
         archiveViewModel = ArchiveViewModel(FakeDatabase(),4)
     )
 }

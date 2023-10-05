@@ -1,5 +1,6 @@
 package com.example.uiassignment
 
+import android.content.Context
 import androidx.compose.ui.graphics.Color
 import co.yml.charts.common.model.Point
 import kotlin.random.Random
@@ -70,57 +71,63 @@ class FakeData {
         Color.Magenta
     )
 
-    val token1 = TokenModel(
+    private val token1 = TokenModel(
         id = 6,
         name = "Desire Grand Prix",
         current = 14.23,
         growthPercent = 4.1,
+        positiveGrowth = true,
         description = "DGP",
-        imageId = R.drawable.token_dgp
+        imageId = R.drawable.token_dgp,
     )
 
-    val token2 = TokenModel(
+    private val token2 = TokenModel(
         id = 7,
         name = "Jyamato Grand Prix",
         current = 24.53,
         growthPercent = 3.16,
+        positiveGrowth = false,
         description = "JGP",
         imageId = R.drawable.token_jgp
     )
 
-    val token3 = TokenModel(
+    private val token3 = TokenModel(
         id = 8,
         name = "Desire Royale",
         current = 31.23,
         growthPercent = 2.91,
         description = "DR",
+        positiveGrowth = false,
         imageId = R.drawable.token_dr
     )
 
-    val token4 = TokenModel(
+    private val token4 = TokenModel(
         id = 9,
         name = "Discord",
         current = 17.23,
         growthPercent = 31.34,
         description = "DIS",
+        positiveGrowth = true,
         imageId = R.drawable.token_discord
     )
 
-    val token5 = TokenModel(
+    private val token5 = TokenModel(
         id = 10,
         name = "Doritos",
         current = 43.29,
         growthPercent = 9.1,
         description = "DRT",
+        positiveGrowth = true,
         imageId = R.drawable.token_doritos
     )
 
-    val token6 = TokenModel(
+    private val token6 = TokenModel(
         id = 11,
         name = "Unity",
         current = 18.23,
         growthPercent = 1.91,
         description = "UNI",
+        positiveGrowth = false,
         imageId = R.drawable.token_unity
     )
 
@@ -278,4 +285,58 @@ class FakeData {
 
     fun favoriteTokens() = getTokens().subList(0,2)
     fun popularTokens() = getTokens().subList(3,5)
+    fun getArchivedTokens():List<TokenModel> {
+        val result = mutableListOf<TokenModel>()
+        var currentId = 20
+        val imageIds = getImageIds(MainActivity() as Context)
+        repeat(20) {
+            result.add(
+                TokenModel(
+                    id = currentId,
+                    name = getRandomName(),
+                    current = trimDouble2(Random.nextDouble(1.0,70.0)),
+                    growthPercent = trimDouble2(Random.nextDouble(0.01,7.0)),
+                    positiveGrowth = false,
+                    description = getRandomName(),
+                    imageId = imageIds.random()
+                )
+            )
+            currentId += 1
+        }
+        return result
+    }
+
+    fun getNFTs():List<NFT> {
+        val result = mutableListOf<NFT>()
+        for (imageID in getImageIds(MainActivity() as Context)) {
+            result.add(
+                NFT(
+                    id = imageID,
+                    name = getRandomName(),
+                    imageId = imageID,
+                    tagNumber = Random.nextInt(1,9999),
+                    description ="Arch-Nemesis of ${getRandomName()} their battle shook the metaverse to it's core",
+                    traits = generateTraits(),
+                )
+            )
+        }
+        return result
+    }
+
+    fun getNFTFromID(id: Int):NFT {
+        for (NFT in getNFTs()) {
+            if (NFT.id == id) {
+                return NFT
+            }
+        }
+
+        return NFT(
+            id = 6996,
+            name = "Baraka Obama",
+            imageId = R.drawable.baraka_obama,
+            tagNumber = 6996,
+            description ="Arch-Nemesis of ${getRandomName()} their battle shook the metaverse to it's core",
+            traits = generateTraits(),
+        )
+    }
 }

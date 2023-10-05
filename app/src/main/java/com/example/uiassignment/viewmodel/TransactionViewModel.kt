@@ -15,6 +15,7 @@ class TransactionViewModel(database: Database,id: Int):ViewModel() {
     private val _model = MutableStateFlow(thisDatabase.getModelFromID(id))
     val model: StateFlow<Model> = _model
     val listOfModels = thisDatabase.getModels()
+    val tokens = thisDatabase.getTokens()
     fun changeModel(id: Int) {
         _model.value = thisDatabase.getModelFromID(id)
     }

@@ -11,6 +11,9 @@ interface Database {
     fun getFavoriteTokens(): List<TokenModel>
     fun getPopularTokens(): List<TokenModel>
     fun getActivityRecords(): List<Categorized>
+    fun getArchivedTokens(): List<TokenModel>
+    fun getNFTs(): List<NFT>
+    fun getNFTFromId(id: Int): NFT
 }
 
 class FakeDatabase :Database {
@@ -59,5 +62,15 @@ class FakeDatabase :Database {
         }
     }
 
+    override fun getArchivedTokens(): List<TokenModel> {
+        return FakeData().getArchivedTokens()
+    }
 
+    override fun getNFTs(): List<NFT> {
+        return FakeData().getNFTs()
+    }
+
+    override fun getNFTFromId(id: Int): NFT {
+        return FakeData().getNFTFromID(id)
+    }
 }

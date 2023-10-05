@@ -67,6 +67,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.example.uiassignment.Constant.Companion.primaryColor
+import com.example.uiassignment.Constant.Companion.secondaryColor
+import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.R
 import com.example.uiassignment.TokenModel
@@ -77,15 +80,12 @@ import com.example.uiassignment.viewmodel.SwipeViewModel
 
 @Composable
 fun SwapScreen(
-    textFont: FontFamily,
     swapViewModel: SwapViewModel
 ) {
     val model by remember { mutableStateOf(swapViewModel.model) }
     val numberInputViewModel = NumberInputViewModel()
     val configuration = LocalConfiguration.current
     val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
-    val primaryColor = colorResource(id = R.color.teal_200)
-    val secondaryColor = colorResource(id = R.color.teal_700)
     val sendingMoney by numberInputViewModel.money.collectAsState()
     val swappingMoney by numberInputViewModel.swappingMoney.collectAsState()
     val loadingResult by numberInputViewModel.loading.collectAsState()
@@ -637,8 +637,6 @@ fun SwapScreen(
                         ) {
                             NumberPanel(
                                 value = it,
-                                textColor = primaryColor,
-                                textFont = textFont,
                                 numberInputViewModel
                             )
                         }
@@ -1003,8 +1001,5 @@ fun SuggestedToken(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSwap() {
-    SwapScreen(
-        textFont = FontFamily(Font(R.font.impact)),
-        swapViewModel = SwapViewModel(FakeDatabase(),2)
-    )
+    SwapScreen(swapViewModel = SwapViewModel(FakeDatabase(),2))
 }

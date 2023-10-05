@@ -8,9 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.navigation.NavController
+ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,15 +17,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.uiassignment.composeui.HomeScreen
 import com.example.uiassignment.composeui.InfoScreen
-import com.example.uiassignment.composeui.PhotoDetail
+import com.example.uiassignment.composeui.NFTDetail
 import com.example.uiassignment.composeui.QrCodeScanner
 import com.example.uiassignment.composeui.SettingScreen
 import com.example.uiassignment.composeui.Archive
  import com.example.uiassignment.composeui.SwapScreen
  import com.example.uiassignment.composeui.Transaction
 import com.example.uiassignment.ui.theme.UiAssignmentTheme
+ import com.example.uiassignment.viewmodel.ArchiveViewModel
  import com.example.uiassignment.viewmodel.HomeViewModel
  import com.example.uiassignment.viewmodel.InfoScreenViewModel
+ import com.example.uiassignment.viewmodel.NFTDetailViewModel
  import com.example.uiassignment.viewmodel.SwapViewModel
  import com.example.uiassignment.viewmodel.TransactionViewModel
 
@@ -133,10 +133,7 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
              }
          ) {
              it.arguments?.let { it1 ->
-                 Transaction(
-                     textFont = FontFamily(Font(R.font.impact)),
-                     TransactionViewModel(selectedDatabase,it1.getInt("id"))
-                 )
+                 Transaction(TransactionViewModel(selectedDatabase,it1.getInt("id")))
              }
          }
 
@@ -150,11 +147,8 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
          ) {
              if (it.arguments!=null) {
                  Archive(
-                     images = getImageIds(context),
-                     modelId = it.arguments!!.getInt("id"),
-                     textFont = FontFamily(Font(R.font.impact)),
                      navController = navController,
-                     context = context
+                     archiveViewModel = ArchiveViewModel(selectedDatabase,it.arguments!!.getInt("id"))
                  )
              }
          }
@@ -162,19 +156,22 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
          composable(
              route = "PhotoDetail/{userId}/{photoId}",
              arguments = listOf(
-                 navArgument(name = "userId") {
+                 navArgument(name = "modelId") {
                      type = NavType.IntType
                  },
-                 navArgument(name = "photoId") {
+                 navArgument(name = "nftId") {
                      type = NavType.IntType
                  }
              )
          ) {
              if (it.arguments!=null) {
-                 PhotoDetail(
-                     modelId = it.arguments!!.getInt("userId"),
-                     photoId = it.arguments!!.getInt("photoId"),
-                     navController = navController
+                 NFTDetail(
+                     navController = navController,
+                     nftDetailViewModel = NFTDetailViewModel(
+                         selectedDatabase,
+                         nftId = it.arguments!!.getInt("nftId"),
+                         modelId = it.arguments!!.getInt("modelId")
+                     )
                  )
              }
          }
@@ -195,10 +192,7 @@ import com.example.uiassignment.ui.theme.UiAssignmentTheme
              )
          ) {
              if (it.arguments!=null) {
-                 SwapScreen(
-                     textFont = FontFamily(Font(R.font.impact)),
-                     swapViewModel = SwapViewModel(selectedDatabase,it.arguments!!.getInt("id"))
-                 )
+                 SwapScreen(swapViewModel = SwapViewModel(selectedDatabase,it.arguments!!.getInt("id")))
              }
          }
      }

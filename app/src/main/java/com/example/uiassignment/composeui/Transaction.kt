@@ -61,6 +61,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.example.uiassignment.Constant.Companion.primaryColor
+import com.example.uiassignment.Constant.Companion.secondaryColor
+import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.FakeDatabase
 import com.example.uiassignment.Model
 import com.example.uiassignment.R
@@ -71,7 +74,6 @@ import com.example.uiassignment.viewmodel.TransactionViewModel
 
 @Composable
 fun Transaction(
-    textFont: FontFamily,
     transactionViewModel: TransactionViewModel
 ) {
     val model by transactionViewModel.model.collectAsState()
@@ -79,8 +81,6 @@ fun Transaction(
     val sendingMoney by numberInputViewModel.money.collectAsState()
     val configuration = LocalConfiguration.current
     val swipeViewModel = SwipeViewModel(configuration.screenHeightDp / 2)
-    val primaryColor = colorResource(id = R.color.teal_200)
-    val secondaryColor = colorResource(id = R.color.teal_700)
     val listOfInput = listOf("1","2","3","4","5","6","7","8","9",".","0","←")
 
     Scaffold(
@@ -421,8 +421,6 @@ fun Transaction(
                         ) {
                             NumberPanel(
                                 value = it,
-                                textColor = primaryColor,
-                                textFont = textFont,
                                 numberInputViewModel
                             )
                         }
@@ -448,8 +446,6 @@ fun getRawMoneyNumber(
 @Composable
 fun NumberPanel(
     value: String,
-    textColor: Color,
-    textFont: FontFamily,
     numberInputViewModel: NumberInputViewModel
 ) {
     val configuration = LocalConfiguration.current
@@ -469,7 +465,7 @@ fun NumberPanel(
         Text(
             text = value,
             style = TextStyle(
-                color = textColor
+                color = primaryColor
             ),
             fontSize = (height / 2.6).sp,
             fontFamily = textFont
@@ -485,16 +481,7 @@ fun ChangeModel(
     val configuration = LocalConfiguration.current
     val offset by swipeViewModel.currentOffset.collectAsState()
     val active by swipeViewModel.activation.collectAsState()
-    val secondaryColor = colorResource(id = R.color.teal_700)
-    val textFont = FontFamily(Font(R.font.impact))
-    val listOfTokenImageId = listOf(
-        R.drawable.token_dgp,
-        R.drawable.token_dr,
-        R.drawable.token_discord,
-        R.drawable.token_doritos,
-        R.drawable.token_jgp,
-        R.drawable.token_unity
-    )
+    val listOfTokens = transactionViewModel.tokens
     val padding8 = 8.dp
 
     AnimatedVisibility(
@@ -600,10 +587,10 @@ fun ChangeModel(
                     ) {
                         LazyRow {
                             items(
-                                listOfTokenImageId,
-                                key = { it }
+                                listOfTokens,
+                                key = { it.id }
                             ) {
-                                Token(imageId = it)
+                                Token(imageId = it.imageId)
                             }
                         }
 
@@ -641,9 +628,7 @@ fun ChangeModel(
 }
 
 @Composable
-fun Token(
-    imageId:Int
-) {
+fun Token(imageId:Int) {
     Card(
         modifier = Modifier
             .size(16.dp)
@@ -763,8 +748,5 @@ fun ConstraintOption(
 @Preview(showBackground = true)
 @Composable
 fun PreviewTransaction() {
-    Transaction(
-        textFont = FontFamily(Font(R.font.impact)),
-        TransactionViewModel(FakeDatabase(),2)
-    )
+    Transaction(TransactionViewModel(FakeDatabase(),2))
 }

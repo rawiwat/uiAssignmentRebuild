@@ -88,7 +88,9 @@ fun InfoScreen(
     navController: NavController,
     infoScreenViewModel: InfoScreenViewModel
 ) {
-    val model by infoScreenViewModel.model.collectAsState()
+    val model = infoScreenViewModel.model
+    val statsList = infoScreenViewModel.statsList
+    val linkList = infoScreenViewModel.linkList
     var readMore by remember { mutableStateOf(false) }
     val offsetX by remember { mutableFloatStateOf(0f) }
     val screenScrollState = rememberScrollState()
@@ -97,8 +99,6 @@ fun InfoScreen(
     val bodyFontSize = 14.sp
     val splitedMoney = model.current.toString().split(".")
     val bodyPadding = 5.dp
-    val statsList by infoScreenViewModel.statsList.collectAsState()
-    val linkList by infoScreenViewModel.linkList.collectAsState()
 
     Scaffold(
         topBar = {

@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,45 +43,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.example.uiassignment.FakeData
+import com.example.uiassignment.Constant.Companion.primaryColor
+import com.example.uiassignment.Constant.Companion.secondaryColor
+import com.example.uiassignment.Constant.Companion.textFont
 import com.example.uiassignment.R
-import com.example.uiassignment.Trait
-import com.example.uiassignment.getRandomName
-import com.example.uiassignment.toModel
+import com.example.uiassignment.TraitType
 import com.example.uiassignment.traitsValueGenerator
-import kotlin.random.Random
+import com.example.uiassignment.viewmodel.NFTDetailViewModel
 
 @Composable
-fun PhotoDetail(
-    modelId:Int,
-    photoId:Int,
-    navController:NavController
+fun NFTDetail(
+    navController: NavController,
+    nftDetailViewModel: NFTDetailViewModel
 ) {
-    val model by remember {
-        mutableStateOf(FakeData().getModelFromID(modelId).toModel())
-    }
-    val primaryColor = colorResource(id = R.color.teal_200)
-    val secondaryColor = colorResource(id = R.color.teal_700)
-    val textFont = FontFamily(Font(R.font.impact))
     val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    val name by rememberSaveable {
-        mutableStateOf(getRandomName())
-    }
-
-    val enemyName by rememberSaveable {
-        mutableStateOf(getRandomName())
-    }
-
-    val tag by rememberSaveable {
-        mutableStateOf("#${Random.nextInt(0,9999)}")
-    }
+    val nft = nftDetailViewModel.nft
+    val model = nftDetailViewModel.model
+    val tag by rememberSaveable { mutableStateOf("#${nft.tagNumber}") }
 
     val sideScreenPadding = 12.dp
 
     val betweenComponentPadding = 8.dp
 
-    val traits = Trait.values().toList()
+    val traits = TraitType.values().toList()
 
     val scrollState = rememberScrollState()
 
@@ -100,7 +83,7 @@ fun PhotoDetail(
                     painter = painterResource(id = R.drawable.point_back),
                     contentDescription = null,
                     modifier = Modifier
-                        .clickable { navController.navigate("Swap/${model.id}") }
+                        .clickable { navController.navigate("Archive/${model.id}") }
                         .size(20.dp)
                         .constrainAs(arrow) {
                             start.linkTo(parent.start, margin = 15.dp)
@@ -143,7 +126,7 @@ fun PhotoDetail(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        painter = painterResource(id = photoId),
+                        painter = painterResource(id = nft.imageId),
                         contentDescription = null,
                         modifier = Modifier
                             .size(screenWidth.dp)
@@ -155,7 +138,7 @@ fun PhotoDetail(
                 }
 
                 Text(
-                    text = "$name $tag",
+                    text = "${nft.name} $tag",
                     fontSize = 18.sp,
                     fontFamily = textFont,
                     style = TextStyle(
@@ -199,7 +182,7 @@ fun PhotoDetail(
 
                             Column {
                                 Text(
-                                    text = name,
+                                    text = nft.name,
                                     fontSize = 18.sp,
                                     fontFamily = textFont,
                                     style = TextStyle(
@@ -266,7 +249,7 @@ fun PhotoDetail(
                 Spacer(modifier = Modifier.height(betweenComponentPadding))
 
                 Text(
-                    text = "Arch-Nemesis of $enemyName their battle shook the metaverse to it's core",
+                    text = nft.description,
                     fontSize = 18.sp,
                     fontFamily = textFont,
                     style = TextStyle(
@@ -349,7 +332,7 @@ fun PhotoDetail(
 }
 
 @Composable
-fun TraitBox(trait: Trait) {
+fun TraitBox(trait: TraitType) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.Gray

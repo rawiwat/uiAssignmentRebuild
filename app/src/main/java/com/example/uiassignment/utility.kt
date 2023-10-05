@@ -1,15 +1,12 @@
 package com.example.uiassignment
 
 import android.content.Context
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.SortedMap
 import kotlin.random.Random
 
@@ -35,7 +32,7 @@ fun generateAXisX(
 ): AxisData {
     return AxisData.Builder()
         .axisStepSize(stepSize.dp)
-        .backgroundColor(androidx.compose.ui.graphics.Color.Black)
+        .backgroundColor(Color.Black)
         .steps(pointsData.size - 1)
         //.labelData { i -> i.toString() }
         //.labelAndAxisLinePadding(axisPadding.dp)
@@ -47,7 +44,7 @@ fun generateAxisY(
 ): AxisData {
     return AxisData.Builder()
         .steps(stepSize)
-        .backgroundColor(androidx.compose.ui.graphics.Color.Black)
+        .backgroundColor(Color.Black)
         //.labelAndAxisLinePadding(axisPadding.dp)
         //.labelData { i ->
         //    val yScale = 100 / stepSize
@@ -155,7 +152,7 @@ fun getRandomName():String {
         "Tommy Knox").random()
 }
 
-enum class Trait(val type: String) {
+enum class TraitType(val type: String) {
     HAT("Hat"),
     BODY("Body"),
     EYES("Eyes"),
@@ -165,16 +162,30 @@ enum class Trait(val type: String) {
     LEG("Leg")
 }
 
-fun traitsValueGenerator(traitType: Trait):String {
+fun traitsValueGenerator(traitType: TraitType):String {
     return when(traitType) {
-        Trait.HAT -> listOf("Chef","Fedora","Cap","Top Hat","Deerstalker").random()
-        Trait.BODY -> listOf("Suit", "T-Shirt", "Pajamas", "Sleeveless","Blouse").random()
-        Trait.EYES -> listOf("Black","Blue","Red","Brown","Green").random()
-        Trait.MOUTH -> listOf("Bow","Heart","Full","Wide","Top-Heavy").random()
-        Trait.EAR -> listOf("Pointy","Square","Broad","Protruding","Pierced").random()
-        Trait.ARM -> listOf("Glove","Ring","Watch","Band","Armlet").random()
-        Trait.LEG -> listOf("Legging","Jeans","Pajamas","Pants","Jeggings").random()
+        TraitType.HAT -> listOf("Chef","Fedora","Cap","Top Hat","Deerstalker").random()
+        TraitType.BODY -> listOf("Suit", "T-Shirt", "Pajamas", "Sleeveless","Blouse").random()
+        TraitType.EYES -> listOf("Black","Blue","Red","Brown","Green").random()
+        TraitType.MOUTH -> listOf("Bow","Heart","Full","Wide","Top-Heavy").random()
+        TraitType.EAR -> listOf("Pointy","Square","Broad","Protruding","Pierced").random()
+        TraitType.ARM -> listOf("Glove","Ring","Watch","Band","Armlet").random()
+        TraitType.LEG -> listOf("Legging","Jeans","Pajamas","Pants","Jeggings").random()
     }
+}
+
+fun generateTraits():List<Trait> {
+    val result = mutableListOf<Trait>()
+    val traits = TraitType.values().toList()
+    for (trait in traits) {
+        result.add(
+            Trait(
+                type = trait,
+                detail = traitsValueGenerator(trait)
+            )
+        )
+    }
+    return result
 }
 
 enum class ActivityTypes(val typeName: String) {
@@ -247,6 +258,7 @@ fun generateRandomDate(): Date {
 
 fun generateActivity(id: Int): CryptoActivity {
     val type = ActivityTypes.values().toList().random()
+    val imageIds = getImageIds(MainActivity() as Context)
     return CryptoActivity(
         type = type.typeName,
         detail = generateActivityDetail(type),
@@ -254,7 +266,8 @@ fun generateActivity(id: Int): CryptoActivity {
             generateRandomDate(),
             getRandomTime()
         ),
-        id = id
+        id = id,
+        imageId = imageIds.random()
     )
 }
 
@@ -283,7 +296,7 @@ enum class ArchiveScreenType {
 fun walletCode(walletName: String): String {
     var hash = 0
     for (char in walletName) {
-        hash = (hash * 31 + char.toInt()) % Int.MAX_VALUE
+        hash = (hash * 31 + char.code) % Int.MAX_VALUE
     }
     return hash.toString()
 }
